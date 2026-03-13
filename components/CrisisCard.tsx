@@ -66,15 +66,16 @@ export function CrisisCard() {
           }}
         >
           <p className="text-sm font-bold mb-1" style={{ color: "var(--accent)" }}>
-            Egypt — Helpline
+            Suicide Prevention Crisis Lines
           </p>
           <p className="text-lg font-black mb-1" style={{ color: "var(--text-primary)" }}>
-            08008880700
+            16328
           </p>
           <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
             Free 24/7 psychological support
           </p>
         </div>
+
       </div>
     </motion.div>
   );
