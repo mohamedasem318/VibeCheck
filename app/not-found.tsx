@@ -14,7 +14,7 @@ export default function NotFound() {
         <h1 className="text-9xl font-black mb-4 opacity-10">404</h1>
         <h2 className="text-3xl font-bold mb-6">the vibe is building.</h2>
         <p className="text-secondary mb-10 max-w-md mx-auto">
-          we couldn't find the page you're looking for. maybe it's in a different state of mind?
+          we couldn&apos;t find the page you&apos;re looking for. maybe it&apos;s in a different state of mind?
         </p>
         <Link 
           href="/" 

@@ -51,7 +51,7 @@ export function AnimatedBackground() {
   const isRainbow = classification === "rainbow";
 
   return (
-    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0 bg-[var(--bg-primary)] transition-colors duration-1000">
+    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0 bg-[var(--bg-primary)] transition-colors duration-300">
       {/* Noise Overlay */}
       <div 
         className="absolute inset-0 z-10 opacity-[0.035] mix-blend-overlay"
@@ -63,12 +63,13 @@ export function AnimatedBackground() {
       {/* Orb 1: Top Right */}
       <motion.div
         key={`orb-1-${classification ?? "none"}`}
-        className="absolute top-[-10%] right-[-10%] w-[60vw] h-[60vw] rounded-full blur-[120px] opacity-20"
+        className="absolute top-[-10%] right-[-10%] w-[60vw] h-[60vw] rounded-full blur-[80px] opacity-20"
+        style={{ willChange: "transform" }}
         animate={{
           x: [0, -50, 0],
           y: [0, 50, 0],
           scale: [1, 1.1, 1],
-          backgroundColor: isRainbow ? colors : [colors[0]],
+          backgroundColor: isRainbow ? colors : colors[0],
         }}
         transition={{
           duration: isRainbow ? 26 : 15,
@@ -80,12 +81,13 @@ export function AnimatedBackground() {
       {/* Orb 2: Bottom Left */}
       <motion.div
         key={`orb-2-${classification ?? "none"}`}
-        className="absolute bottom-[-20%] left-[-10%] w-[70vw] h-[70vw] rounded-full blur-[140px] opacity-[0.15]"
+        className="absolute bottom-[-20%] left-[-10%] w-[70vw] h-[70vw] rounded-full blur-[90px] opacity-[0.15]"
+        style={{ willChange: "transform" }}
         animate={{
           x: [0, 70, 0],
           y: [0, -30, 0],
           scale: [1, 1.2, 1],
-          backgroundColor: isRainbow ? colors.slice(2) : [colors[1]],
+          backgroundColor: isRainbow ? colors.slice(2) : colors[1],
         }}
         transition={{
           duration: isRainbow ? 32 : 18,
@@ -98,12 +100,13 @@ export function AnimatedBackground() {
       {/* Orb 3: Center Drifter */}
       <motion.div
         key={`orb-3-${classification ?? "none"}`}
-        className="absolute top-[30%] left-[20%] w-[50vw] h-[50vw] rounded-full blur-[100px] opacity-10"
+        className="absolute top-[30%] left-[20%] w-[50vw] h-[50vw] rounded-full blur-[70px] opacity-10"
+        style={{ willChange: "transform" }}
         animate={{
           x: [0, 100, -50, 0],
           y: [0, -50, 100, 0],
           scale: [1, 0.9, 1.1, 1],
-          backgroundColor: isRainbow ? colors.slice(4) : [colors[2]],
+          backgroundColor: isRainbow ? colors.slice(4) : colors[2],
         }}
         transition={{
           duration: isRainbow ? 38 : 25,

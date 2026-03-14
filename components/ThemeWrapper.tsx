@@ -28,9 +28,8 @@ export function ThemeWrapper({ children }: { children: React.ReactNode }) {
   const isStress = classification === "stress";
 
   const wrapperStyle: React.CSSProperties = {
-
     ...(vars as React.CSSProperties),
-    backgroundColor: "transparent", // Let the body background or AnimatedBackground handle it
+    backgroundColor: "transparent",
     color: "var(--text-primary)",
     fontWeight: "var(--font-weight)" as string,
     letterSpacing: "var(--letter-spacing)" as string,
@@ -38,44 +37,18 @@ export function ThemeWrapper({ children }: { children: React.ReactNode }) {
     position: "relative",
   };
 
-  const anxietyLike = isAnxiety || isRainbow;
-
-  const anxietyAnim = anxietyLike
-    ? {
-        x: [0, -1, 1, -0.5, 0.5, 0],
-        y: [0, 0.5, -0.5, 1, -0.5, 0],
-        rotate: [0, -0.15, 0.15, -0.1, 0.1, 0],
-      }
-    : { x: 0, y: 0, rotate: 0 };
-
-  const depressionAnim = isDepression
-    ? { y: [0, 5, 0] }
-    : { y: 0 };
-
-  const transitionBase =
-    isDepression
-      ? { duration: 4, repeat: Infinity, ease: "easeInOut" as const }
-      : anxietyLike
-      ? { duration: 0.8, repeat: Infinity, ease: "linear" as const }
-      : { duration: 0 };
-
   return (
     <div
       style={wrapperStyle}
-      className="vibecheck-root transition-colors duration-1000"
+      className={`vibecheck-root transition-colors duration-300 ${isPD ? "pd-misalign" : ""}`}
     >
       <AnimatedBackground />
       {isBipolar && <BipolarBackground />}
       {isPD && <ShatteredGlassOverlay />}
 
-      <motion.div
-        animate={{ ...(isAnxiety ? anxietyAnim : {}), ...(isDepression ? depressionAnim : {}) }}
-        transition={transitionBase}
-        className={`relative z-20 ${isPD ? "pd-misalign" : ""}`}
-        style={isStress ? { fontWeight: 800, letterSpacing: "-0.03em" } : {}}
-      >
+      <div className="relative z-20">
         {children}
-      </motion.div>
+      </div>
     </div>
   );
 }

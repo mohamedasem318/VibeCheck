@@ -43,7 +43,7 @@ VibeCheck/
 ## Local Development
 
 ### Prerequisites
-- Node.js 18+
+- Node.js 20+ (recommended for Next.js 15)
 - Python 3.10+
 - The model files in `saved_models/` (not in git — get from the team)
 
@@ -179,10 +179,18 @@ Then copy the new model files into the Space repo and push normally.
 
 | Layer      | Technology                                      |
 | ---------- | ----------------------------------------------- |
-| Frontend   | Next.js 14, TypeScript, Tailwind CSS, Framer Motion, Zustand |
+| Frontend   | Next.js 15, React 19, TypeScript, Tailwind CSS, Framer Motion, Zustand |
 | Backend    | FastAPI, Python 3.10, PyTorch (CPU), HuggingFace Transformers |
 | Model      | MentalBERT (bert-base-uncased fine-tuned), 7-class, ~82% accuracy |
 | Hosting    | Vercel (frontend) + HuggingFace Spaces (backend) |
+
+---
+
+## Performance & Optimization
+
+The 2026 audit introduced several key performance improvements:
+- **GPU Acceleration**: Keyframe animations (`jitter`, `slow-sink`) and heavy background elements now use `translate3d` and `will-change: transform` to offload work from the CPU to the GPU.
+- **Robust Detection**: Enhanced easter egg detection with word boundaries to prevent accidental triggers.
 
 ---
 

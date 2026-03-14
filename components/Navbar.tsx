@@ -16,7 +16,8 @@ export function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-10 h-16 border-b border-[var(--border-color)] transition-colors duration-300 bg-opacity-60 backdrop-blur-xl"
       style={{ 
         backgroundColor: "color-mix(in srgb, var(--bg-primary) 60%, transparent)", 
-        borderColor: "var(--border-color)" 
+        borderColor: "var(--border-color)",
+        willChange: "backdrop-filter"
       }}
     >
       <Link href="/" className="text-xl font-medium tracking-tight transition-colors duration-300 hover:opacity-80"
@@ -29,7 +30,7 @@ export function Navbar() {
       <div className="flex items-center gap-4">
         {/* Tab switcher: Check / About */}
         <div
-          className="hidden sm:flex items-center rounded-full px-1 py-0.5 border transition-colors duration-300"
+          className="flex items-center rounded-full px-1 py-0.5 border transition-colors duration-300"
           style={{
             borderColor: "color-mix(in srgb, var(--border-color) 60%, transparent)",
             backgroundColor:
@@ -38,7 +39,7 @@ export function Navbar() {
         >
           <Link
             href="/"
-            className="text-xs md:text-sm font-medium px-3 py-1.5 rounded-full transition-all"
+            className="text-[10px] xs:text-xs md:text-sm font-medium px-2 xs:px-3 py-1.5 rounded-full transition-all"
             style={{
               backgroundColor: !isOnAbout
                 ? "var(--accent)"
@@ -51,7 +52,7 @@ export function Navbar() {
           </Link>
           <Link
             href="/about"
-            className="text-xs md:text-sm font-medium px-3 py-1.5 rounded-full transition-all"
+            className="text-[10px] xs:text-xs md:text-sm font-medium px-2 xs:px-3 py-1.5 rounded-full transition-all"
             style={{
               backgroundColor: isOnAbout ? "var(--accent)" : "transparent",
               color: isOnAbout ? "var(--bg-primary)" : "var(--text-secondary)",

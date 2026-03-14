@@ -25,11 +25,11 @@ export function CrisisCard() {
         className="text-lg font-bold uppercase tracking-widest mb-4 flex items-center gap-2"
         style={{ color: "var(--accent)" }}
       >
-        You're not alone
+        You&apos;re not alone
       </h3>
 
       <p className="text-base leading-relaxed mb-6" style={{ color: "var(--text-secondary)" }}>
-        If you're going through something difficult, please reach out. Talking to
+        If you&apos;re going through something difficult, please reach out. Talking to
         someone can make a real difference.
       </p>
 

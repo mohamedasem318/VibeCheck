@@ -4,25 +4,19 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import torch
 import torch.nn.functional as F
-from transformers import AutoTokenizer, BertForSequenceClassification
+from transformers import AutoTokenizer, BertForSequenceClassification, BertConfig
 import joblib
 import os
 
 _BASE = os.path.dirname(os.path.abspath(__file__))
-MODEL_DIR = os.getenv(
-    "MODEL_DIR",
-    os.path.join(_BASE, "..", "saved_models", "mentalbert_v3flat")
-)
-TOKENIZER_DIR = os.getenv(
-    "TOKENIZER_DIR",
-    os.path.join(MODEL_DIR, "tokenizer")
-)
+_SAVED = os.path.join(_BASE, "saved_models", "mentalbert_v3flat")
+MODEL_DIR = os.getenv("MODEL_DIR", _SAVED)
+TOKENIZER_DIR = os.getenv("TOKENIZER_DIR", os.path.join(_SAVED, "tokenizer"))
 CHECKPOINT_PATH = os.getenv(
     "CHECKPOINT_PATH",
-    os.path.join(_BASE, "..", "saved_models", "mentalbert_v3flat_best.pt")
+    os.path.join(_BASE, "saved_models", "mentalbert_v3flat_best.pt"),
 )
 LABEL_ENCODER_PATH = os.path.join(MODEL_DIR, "label_encoder.joblib")
-BASE_MODEL_NAME = "mental/mental-bert-base-uncased"
 N_CLASSES = 7
 MAX_LEN = 128
 DEVICE = torch.device("cpu")
@@ -41,20 +35,26 @@ model_state: dict = {}
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(_app: FastAPI):
     tokenizer = AutoTokenizer.from_pretrained(TOKENIZER_DIR)
 
-    # Load architecture from HuggingFace base, then overwrite weights from .pt checkpoint
-    model = BertForSequenceClassification.from_pretrained(
-        BASE_MODEL_NAME, num_labels=N_CLASSES, ignore_mismatched_sizes=True
+    # Build BERT architecture offline using known mental-bert/bert-base-uncased dims,
+    # then load the fine-tuned weights from the .pt checkpoint.
+    cfg = BertConfig(
+        vocab_size=30522,
+        hidden_size=768,
+        num_hidden_layers=12,
+        num_attention_heads=12,
+        intermediate_size=3072,
+        num_labels=N_CLASSES,
     )
+    model = BertForSequenceClassification(cfg)
     checkpoint = torch.load(CHECKPOINT_PATH, map_location=DEVICE)
-    # .pt may be a raw state_dict or wrapped under a key
     state_dict = checkpoint.get("model_state_dict", checkpoint)
     model.load_state_dict(state_dict)
-
     model.to(DEVICE)
     model.eval()
+
     label_encoder = joblib.load(LABEL_ENCODER_PATH)
     model_state.update({"tokenizer": tokenizer, "model": model, "label_encoder": label_encoder})
     print("MentalBERT model loaded successfully.")

@@ -34,13 +34,13 @@ const containerVariants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
-    transition: { staggerChildren: 0.1 },
+    transition: { staggerChildren: 0.05 },
   },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+  hidden: { opacity: 0, y: 15 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } },
 };
 
 export default function AboutPage() {
@@ -55,7 +55,7 @@ export default function AboutPage() {
         className={`mb-24 ${isPD ? "pd-panel" : ""}`}
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
       >
         <h2
           className="text-sm font-bold uppercase tracking-[0.25em] mb-10"
@@ -79,7 +79,7 @@ export default function AboutPage() {
             By leveraging advanced Natural Language Processing (NLP), the platform analyzes text 
             to detect emotional states—ranging from anxiety and stress to clinical conditions. 
             Our unique interface dynamically transforms its entire visual identity to reflect 
-            the user's vibe, creating an immersive and empathetic experience.
+            the user&apos;s vibe, creating an immersive and empathetic experience.
           </p>
         </div>
 
@@ -165,7 +165,7 @@ export default function AboutPage() {
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: 0.4 }}
       >
         <h2
           className="text-sm font-bold uppercase tracking-[0.25em] mb-10"
@@ -205,7 +205,7 @@ export default function AboutPage() {
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
+        transition={{ duration: 0.4 }}
       >
         <h2
           className="text-sm font-bold uppercase tracking-[0.25em] mb-6"
@@ -219,7 +219,7 @@ export default function AboutPage() {
           style={{ color: "var(--text-secondary)" }}
         >
           VibeCheck is an academic NLP project developed as part of a university
-          course. It is not a substitute for professional mental health support,
+          course. It isn&apos;t a substitute for professional mental health support,
           clinical assessment, or any form of medical advice. All classifications
             produced by this system are model predictions based on input text and
           should not be interpreted as diagnoses of any mental health condition.

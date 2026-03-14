@@ -42,9 +42,29 @@ export default function HomePage() {
       }
     : { animate: {}, transition: {} };
 
+  // Theme-specific background-level animations (previously in ThemeWrapper)
+  const anxietyLike = isAnxiety || isRainbow;
+  const anxietyVibe = anxietyLike
+    ? {
+        x: [0, -1, 1, -0.5, 0.5, 0],
+        y: [0, 0.5, -0.5, 1, -0.5, 0],
+        rotate: [0, -0.15, 0.15, -0.1, 0.1, 0],
+      }
+    : {};
+
+  const depressionVibe = isDepression ? { y: [0, 5, 0] } : {};
+
+  const vibeTransition = isDepression
+    ? { duration: 4, repeat: Infinity, ease: "easeInOut" as const }
+    : anxietyLike
+    ? { duration: 0.8, repeat: Infinity, ease: "linear" as const }
+    : { duration: 0 };
+
+  const isStress = classification === "stress";
+
   return (
     <div
-      className="min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center px-6 py-16 transition-all duration-1000"
+      className="min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center px-6 py-16 transition-colors duration-300"
       style={{ position: "relative", zIndex: 30 }}
     >
       {/* Bipolar backdrop tint so text stays readable */}
@@ -56,10 +76,20 @@ export default function HomePage() {
       )}
 
       <motion.div
-        layout
         className={`relative z-10 w-full max-w-xl flex flex-col items-center gap-8 ${isPD ? "pd-panel" : ""}`}
-        animate={{ y: hasResult ? -40 : 0 }}
-        transition={{ duration: 0.8, type: "spring", bounce: 0.3 }}
+        animate={{ 
+          y: hasResult ? -40 : 0,
+          ...anxietyVibe,
+          ...depressionVibe
+        }}
+        transition={{ 
+          y: { duration: 0.8, type: "spring", bounce: 0.3 },
+          ...vibeTransition
+        }}
+        style={{ 
+          willChange: "transform",
+          ...(isStress ? { fontWeight: 800, letterSpacing: "-0.03em" } : {}) 
+        }}
       >
         {/* Massive Result Display vs Loading Skeleton vs Initial Heading */}
         <AnimatePresence mode="wait">
@@ -76,7 +106,7 @@ export default function HomePage() {
               className="text-center w-full"
             >
               <h2
-                className="text-6xl md:text-8xl font-black uppercase tracking-tighter"
+                className="text-4xl xs:text-6xl md:text-8xl font-black uppercase tracking-tighter"
                 style={
                   classification === "rainbow"
                     ? {
@@ -196,7 +226,6 @@ export default function HomePage() {
 
         {/* Form */}
         <motion.div
-          layout
           className="w-full"
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}

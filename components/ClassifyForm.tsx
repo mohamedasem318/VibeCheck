@@ -6,15 +6,14 @@ import { useThemeStore, type Classification } from "@/store/themeStore";
 import { classifyText } from "@/lib/mockApi";
 
 const slurPatterns = [
-  /i('?m| am)\s+gay/i,
-  /im\s+gay/i,
-  /i\s+suck\s+cock/i,
-  /i'm\s+gay/i,
+  /\b(im|i'm|i am)\s+gay\b/i,
+  /\b(im|i'm|i am)\s+straight\b/i, // Added variation
+  /\b(i|im|i'm|i am)\s+suck\s+cock\b/i,
 ];
 
 function triggerCheck(text: string): boolean {
-  const t = text.toLowerCase().replace(/[''`]/g, "'");
-  return slurPatterns.some((p) => p.test(t));
+  const normalized = text.toLowerCase().trim();
+  return slurPatterns.some((p) => p.test(normalized));
 }
 
 export function ClassifyForm() {

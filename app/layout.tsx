@@ -8,6 +8,7 @@ const nunito = Nunito({
   subsets: ["latin"],
   variable: "--font-nunito",
   display: "swap",
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -24,7 +25,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${nunito.variable} dark`} suppressHydrationWarning>
-      <body>
+      <body suppressHydrationWarning>
         <ThemeWrapper>
           <Navbar />
           <main className="pt-16">{children}</main>
