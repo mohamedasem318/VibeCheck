@@ -1,24 +1,104 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useThemeStore } from "@/store/themeStore";
 import { ClassifyForm } from "@/components/ClassifyForm";
 import { CrisisCard } from "@/components/CrisisCard";
 import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 
-const vibeSubtexts: Record<string, string> = {
-  normal: "You're doing okay. Keep riding the wave.",
-  anxiety: "Your frequency is vibrating a little too high.",
-  stress: "Heavy mental load detected. Remember to breathe.",
-  depression: "Low energy state detected. Be gentle with yourself.",
-  bipolar: "High variance detected. Anchors hold the ship steady.",
-  personality_disorder: "Fragmented patterns detected. You are more than the pieces.",
-  suicidal: "You are valuable. Help is just a conversation away.",
-  rainbow: "damn, that's straight up gay, not that you're straight.",
+const vibeSubtexts: Record<string, string[]> = {
+  normal: [
+    "The frequency is stable. Baseline vibes detected.",
+    "Standard emotional levels. Carry on, main character.",
+    "Everything looks steady. Enjoy the clear skies.",
+    "The signal is clear. You're handling it well.",
+    "Everything is in sync. Stay in this zone.",
+  ],
+  anxiety: [
+    "Brain.exe is running too many background processes.",
+    "High-speed thoughts detected. Grounding recommended.",
+    "Static detected in the signal. The wires are a bit crossed today.",
+    "The nervous system is playing a lot of high-tempo jazz today.",
+    "Your frequency is vibrating a little too high. Take a breath.",
+  ],
+  stress: [
+    "Heavy mental load detected. Cooling system needed.",
+    "System pressure rising. Time for a manual override.",
+    "Too many open tabs in your brain. Let's close some.",
+    "The engine is running hot. Pull over for a bit.",
+    "High pressure detected. Remember: you are not a machine.",
+  ],
+  depression: [
+    "Low color saturation detected. Your light will return.",
+    "Low energy state detected. Be extra gentle with yourself.",
+    "The signal is a bit muffled. One small step is enough today.",
+    "Rest mode is active. You don't have to be 'on' for anyone.",
+    "The vibe is heavy, but you don't have to carry it alone.",
+  ],
+  bipolar: [
+    "High variance detected. Anchors hold the ship steady.",
+    "Dual frequency signals. Stability is a journey, not a destination.",
+    "Shifting amplitudes recognized. Breathe into the middle ground.",
+    "Emotional tides are high. Keep your feet in the sand.",
+    "Complex signal patterns. Embrace your full spectrum.",
+  ],
+  personality_disorder: [
+    "Shifting layers detected. Which version are we today?",
+    "Broken glass reflects everything. Let's find the focus.",
+    "Multifaceted signal detected. The kaleidoscope is turning.",
+    "Complexity recognized. You are more than the pieces.",
+    "Different frequencies, same soul. We see you.",
+  ],
+  suicidal: [
+    "The signal is fragile. Please reach out, you aren't alone.",
+    "A heavy fog is detected, but there is a clear path through it.",
+    "Your story isn't over. Let's talk to someone who can help.",
+    "The frequency is low, but you are still worth the fight.",
+    "Every life has a frequency. Yours is too valuable to lose.",
+  ],
+  rainbow: [
+    "Damn, that's straight up gay, not that you're straight.",
+    "The AI just asked for its 15-minute break early because of how fruity this is.",
+    "We tried to find a straight line in your input and the model literally crashed.",
+    "Error 404: Heterosexuality not found. Gay ahh bih.",
+    "The server just rebranded to 'GayCheck' because of this input. Hope you're happy.",
+  ],
 };
+
+const SUBTITLES = [
+  "Trauma dumping made aesthetic.",
+  "Your Notes app is tired. Tell us instead.",
+  "The premium home for your internal monologue.",
+  "Is it a vibe or a cry for help?",
+  "Unfiltered. Analyzed. Aesthetic.",
+  "No filter, just raw vibes.",
+  "Because 'I'm fine' is a boring answer.",
+  "Validation is just a click away (mostly).",
+  "Your emotional weather report.",
+  "A safe haven for your 3AM monologues.",
+  "Because sometimes, 'it be like that' isn't enough.",
+  "Turning your chaos into a color palette.",
+  "The AI knows what's up (and it's not judging).",
+  "Your feelings, but make them high-def.",
+  "The official home for 'Not Found' vibes.",
+];
 
 export default function HomePage() {
   const { classification, isLoading, confidence } = useThemeStore();
+  const [subtitle, setSubtitle] = useState(SUBTITLES[0]);
+  const [currentResultSubtext, setCurrentResultSubtext] = useState("");
+
+  useEffect(() => {
+    setSubtitle(SUBTITLES[Math.floor(Math.random() * SUBTITLES.length)]);
+  }, []);
+
+  useEffect(() => {
+    if (classification && vibeSubtexts[classification]) {
+      const options = vibeSubtexts[classification];
+      setCurrentResultSubtext(options[Math.floor(Math.random() * options.length)]);
+    }
+  }, [classification]);
 
   const isSuicidal = classification === "suicidal";
   const isPD = classification === "personality_disorder";
@@ -133,7 +213,7 @@ export default function HomePage() {
                   ? "HAAA GAAAY!"
                   : classification}
               </h2>
-              {vibeSubtexts[classification as string] && (
+              {currentResultSubtext && (
                 <motion.p
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.7 }}
@@ -141,7 +221,7 @@ export default function HomePage() {
                   className="text-lg md:text-xl font-medium mt-4 tracking-wide"
                   style={{ color: "var(--text-secondary)" }}
                 >
-                  {vibeSubtexts[classification as string]}
+                  {currentResultSubtext}
                 </motion.p>
               )}
 
@@ -218,7 +298,7 @@ export default function HomePage() {
                     : {}
                 }
               >
-                tell us how you&apos;re feeling
+                {subtitle}
               </motion.p>
             </motion.div>
           )}
@@ -236,7 +316,7 @@ export default function HomePage() {
 
         {/* Crisis card */}
         <AnimatePresence mode="popLayout">
-          {isSuicidal && (
+          {(isSuicidal || isDepression) && (
             <motion.div
               layout
               key="crisis"

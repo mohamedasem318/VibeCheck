@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useThemeStore, type Classification } from "@/store/themeStore";
 import { classifyText } from "@/lib/mockApi";
@@ -16,6 +16,25 @@ function triggerCheck(text: string): boolean {
   return slurPatterns.some((p) => p.test(normalized));
 }
 
+const PLACEHOLDERS = [
+  "Spill the tea. What's actually going on?",
+  "Wait, did they actually just say that to you?",
+  "POV: You're actually being honest about your day.",
+  "Are we vibing or is the world ending today?",
+  "Entry #402: Still confused about life...",
+  "Describe your day in the most dramatic way possible.",
+  "I'm not saying I'm going through it, but...",
+  "Okay, so basically what happened was...",
+  "Tell me I'm not crazy for feeling [this]...",
+  "I've been holding this in for like three days...",
+  "Current mood: [screams internally]",
+  "If I have to hear 'just breathe' one more time...",
+  "Honestly? Today has been a lot.",
+  "Manifesting a stable mental state today...",
+  "I'm about to go off, but listen...",
+  "I just need to vent about what happened today...",
+];
+
 export function ClassifyForm() {
   const [text, setText] = useState("");
   const [apiError, setApiError] = useState<string | null>(null);
@@ -27,6 +46,12 @@ export function ClassifyForm() {
     setLoading,
     isDarkMode,
   } = useThemeStore();
+
+  const [currentPlaceholder, setCurrentPlaceholder] = useState(PLACEHOLDERS[0]);
+
+  useEffect(() => {
+    setCurrentPlaceholder(PLACEHOLDERS[Math.floor(Math.random() * PLACEHOLDERS.length)]);
+  }, []);
 
   const isAnxiety = classification === "anxiety";
   const isPD = classification === "personality_disorder";
@@ -118,7 +143,7 @@ export function ClassifyForm() {
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="tell us how you're feeling..."
+          placeholder={currentPlaceholder}
           rows={5}
           disabled={isLoading}
           style={textareaStyle}
@@ -145,7 +170,7 @@ export function ClassifyForm() {
                 className="flex items-center justify-center gap-2"
               >
                 <LoadingDots />
-                Analyzing
+                Vibing
               </motion.span>
             ) : (
               <motion.span
