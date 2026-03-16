@@ -226,4 +226,4 @@ app/page.tsx → renders result, confidence bar, crisis card
 
 ### Supervision
 - **Dr. Lamees Nasser** — Assistant Professor
-- **Eng. Mirna** — Teaching Assistant
+- **Eng. Mirna Ahmed** — Teaching Assistant

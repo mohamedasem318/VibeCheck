@@ -13,7 +13,7 @@ const TEAM = [
 
 const SUPERVISORS = [
   { name: "Dr. Lamees Nasser", role: "Assistant Professor" },
-  { name: "Eng. Mirna", role: "Teaching Assistant" },
+  { name: "Eng. Mirna Ahmed", role: "Teaching Assistant" },
 ];
 
 function LinkedInIcon() {
@@ -49,7 +49,7 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-[calc(100vh-4rem)] px-6 md:px-12 py-20 max-w-6xl mx-auto">
-      
+
       {/* ── Section 1: Project Overview ────────────────────────── */}
       <motion.section
         className={`mb-24 ${isPD ? "pd-panel" : ""}`}
@@ -63,22 +63,22 @@ export default function AboutPage() {
         >
           About The Project
         </h2>
-        
+
         <div className="max-w-4xl">
-          <h1 
+          <h1
             className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 leading-[1.1]"
             style={{ color: "var(--text-primary)" }}
           >
             Empowering Mental Health with NLP.
           </h1>
-          <p 
+          <p
             className="text-lg md:text-xl leading-relaxed"
             style={{ color: "var(--text-secondary)" }}
           >
-            VibeCheck is a sophisticated mental health sentiment classifier designed for students. 
-            By leveraging advanced Natural Language Processing (NLP), the platform analyzes text 
-            to detect emotional states—ranging from anxiety and stress to clinical conditions. 
-            Our unique interface dynamically transforms its entire visual identity to reflect 
+            VibeCheck is a sophisticated mental health sentiment classifier designed for students.
+            By leveraging advanced Natural Language Processing (NLP), the platform analyzes text
+            to detect emotional states—ranging from anxiety and stress to clinical conditions.
+            Our unique interface dynamically transforms its entire visual identity to reflect
             the user&apos;s vibe, creating an immersive and empathetic experience.
           </p>
         </div>
@@ -124,7 +124,7 @@ export default function AboutPage() {
                   {member.initials}
                 </div>
                 {/* Decorative background element */}
-                <div 
+                <div
                   className="absolute -inset-2 rounded-[2rem] -z-10 blur-2xl opacity-0 group-hover:opacity-20 transition-opacity duration-500"
                   style={{ backgroundColor: "var(--text-primary)" }}
                 />
@@ -138,7 +138,7 @@ export default function AboutPage() {
                 >
                   {member.name}
                 </p>
-                
+
                 {/* LinkedIn Icon */}
                 <a
                   href={member.linkedin}
@@ -221,7 +221,7 @@ export default function AboutPage() {
           VibeCheck is an academic NLP project developed as part of a university
           course. It isn&apos;t a substitute for professional mental health support,
           clinical assessment, or any form of medical advice. All classifications
-            produced by this system are model predictions based on input text and
+          produced by this system are model predictions based on input text and
           should not be interpreted as diagnoses of any mental health condition.
           If you or someone you know is struggling, please consult a qualified
           mental health professional.

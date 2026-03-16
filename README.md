@@ -198,4 +198,4 @@ The 2026 audit introduced several key performance improvements:
 
 Fatma Al-Zahraa Emad · Gehad Mohamed · Hebatullah El Gazoly · Hussein Ibrahim · Mohamed Assem
 
-Supervised by **Dr. Lamees Nasser** and **Eng. Mirna**
+Supervised by **Dr. Lamees Nasser** and **Eng. Mirna Ahmed**
