@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useThemeStore, type Classification } from "@/store/themeStore";
+import { useThemeStore, type Classification, type ModelOption } from "@/store/themeStore";
 import { classifyText } from "@/lib/mockApi";
 
 const slurPatterns = [
@@ -45,6 +45,8 @@ export function ClassifyForm() {
     setConfidence,
     setLoading,
     isDarkMode,
+    selectedModel,
+    setSelectedModel,
   } = useThemeStore();
 
   const [currentPlaceholder, setCurrentPlaceholder] = useState(PLACEHOLDERS[0]);
@@ -80,7 +82,7 @@ export function ClassifyForm() {
     setConfidence(null);
     setLoading(true);
     try {
-      const result = await classifyText(text);
+      const result = await classifyText(text, selectedModel);
       setClassification(result.classification);
       setConfidence(result.confidence);
     } catch (err) {
@@ -124,8 +126,43 @@ export function ClassifyForm() {
         boxShadow: "0 0 40px -10px var(--accent)",
       };
 
+  const models: { key: ModelOption; label: string }[] = [
+    { key: "mentalbert", label: "MentalBERT" },
+    { key: "longformer", label: "Longformer Pipeline" },
+  ];
+
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-xl mx-auto space-y-6">
+      {/* Model selector */}
+      <div className="flex gap-2">
+        {models.map(({ key, label }) => {
+          const isActive = selectedModel === key;
+          return (
+            <button
+              key={key}
+              type="button"
+              onClick={() => setSelectedModel(key)}
+              style={
+                isActive
+                  ? {
+                      backgroundColor: "var(--accent)",
+                      color: "var(--bg-primary)",
+                      borderColor: "var(--accent)",
+                    }
+                  : {
+                      backgroundColor: "transparent",
+                      color: "var(--text-secondary)",
+                      borderColor: "color-mix(in srgb, var(--border-color) 60%, transparent)",
+                    }
+              }
+              className="px-4 py-2 rounded-xl text-sm font-semibold border transition-all"
+            >
+              {label}
+            </button>
+          );
+        })}
+      </div>
+
       <motion.div
         animate={
           isAnxiety

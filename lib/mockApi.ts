@@ -7,7 +7,7 @@ export interface ClassifyResult {
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export async function classifyText(text: string): Promise<ClassifyResult> {
+export async function classifyText(text: string, model: string = "mentalbert"): Promise<ClassifyResult> {
   if (!API_URL) {
     throw new Error(
       "NEXT_PUBLIC_API_URL is not set. Add it to .env.local for development."
@@ -22,7 +22,7 @@ export async function classifyText(text: string): Promise<ClassifyResult> {
     response = await fetch(`${API_URL}/classify`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text }),
+      body: JSON.stringify({ text, model }),
       signal: controller.signal,
     });
   } catch (networkError) {

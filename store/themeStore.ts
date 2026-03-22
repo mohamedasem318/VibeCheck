@@ -13,15 +13,19 @@ export type Classification =
   | "suicidal"
   | "rainbow";
 
+export type ModelOption = "mentalbert" | "longformer";
+
 interface ThemeState {
   classification: Classification | null;
   confidence: number | null;
   isDarkMode: boolean;
   isLoading: boolean;
+  selectedModel: ModelOption;
   setClassification: (c: Classification | null) => void;
   setConfidence: (v: number | null) => void;
   setLoading: (loading: boolean) => void;
   toggleDarkMode: () => void;
+  setSelectedModel: (m: ModelOption) => void;
 }
 
 export const useThemeStore = create<ThemeState>()(
@@ -31,11 +35,13 @@ export const useThemeStore = create<ThemeState>()(
       confidence: null,
       isDarkMode: true,
       isLoading: false,
+      selectedModel: "mentalbert",
       setClassification: (c) => set({ classification: c }),
       setConfidence: (v) => set({ confidence: v }),
       setLoading: (loading) => set({ isLoading: loading }),
       toggleDarkMode: () =>
         set((state) => ({ isDarkMode: !state.isDarkMode })),
+      setSelectedModel: (m) => set({ selectedModel: m }),
     }),
     {
       name: "vibecheck-theme",
