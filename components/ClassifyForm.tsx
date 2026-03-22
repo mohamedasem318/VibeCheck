@@ -127,8 +127,8 @@ export function ClassifyForm() {
       };
 
   const models: { key: ModelOption; label: string }[] = [
-    { key: "mentalbert", label: "MentalBERT" },
-    { key: "longformer", label: "Longformer Pipeline" },
+    { key: "mentalbert", label: "Quick Vibe" },
+    { key: "longformer", label: "Deep Dive" },
   ];
 
   return (
