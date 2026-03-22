@@ -75,13 +75,96 @@ export default function AboutPage() {
             className="text-lg md:text-xl leading-relaxed"
             style={{ color: "var(--text-secondary)" }}
           >
-            VibeCheck is a sophisticated mental health sentiment classifier designed for students.
-            By leveraging advanced Natural Language Processing (NLP), the platform analyzes text
-            to detect emotional states—ranging from anxiety and stress to clinical conditions.
-            Our unique interface dynamically transforms its entire visual identity to reflect
-            the user&apos;s vibe, creating an immersive and empathetic experience.
+            VibeCheck is a mental health text classifier built for students. Paste how you&apos;re
+            feeling and the model identifies your emotional state across 7 categories — from everyday
+            stress to clinical signals like suicidal ideation. The UI transforms its entire visual
+            identity to match the result, making the experience feel as human as the problem it addresses.
           </p>
         </div>
+
+        <div
+          className="mt-16 h-px w-full"
+          style={{ backgroundColor: "var(--border-color)" }}
+        />
+      </motion.section>
+
+      {/* ── Section 2: The Models ──────────────────────────────── */}
+      <motion.section
+        className={`mb-24 ${isPD ? "pd-panel" : ""}`}
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.4 }}
+      >
+        <h2
+          className="text-sm font-bold uppercase tracking-[0.25em] mb-10"
+          style={{ color: "var(--text-secondary)" }}
+        >
+          The Models
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Quick Vibe */}
+          <div
+            className="rounded-2xl p-8 space-y-5"
+            style={{ backgroundColor: "var(--bg-secondary)", border: "1px solid var(--border-color)" }}
+          >
+            <div className="space-y-1">
+              <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "var(--accent)" }}>Quick Vibe</p>
+              <h3 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>MentalBERT Flat v3</h3>
+            </div>
+            <p className="text-base leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+              A fine-tuned MentalBERT model (BERT-base-uncased with mental health pretraining) trained
+              on a 7-class flat classification task. Fast inference — a single forward pass produces
+              the result. Best for quick reads when you want a near-instant vibe.
+            </p>
+            <div className="grid grid-cols-3 gap-4 pt-2">
+              {[
+                { label: "Accuracy", value: "81.98%" },
+                { label: "Dep→Sui errors", value: "746" },
+                { label: "Sui→Dep errors", value: "478" },
+              ].map(({ label, value }) => (
+                <div key={label} className="space-y-1">
+                  <p className="text-2xl font-black" style={{ color: "var(--text-primary)" }}>{value}</p>
+                  <p className="text-xs font-medium" style={{ color: "var(--text-secondary)" }}>{label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Deep Dive */}
+          <div
+            className="rounded-2xl p-8 space-y-5"
+            style={{ backgroundColor: "var(--bg-secondary)", border: "1px solid var(--border-color)" }}
+          >
+            <div className="space-y-1">
+              <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "var(--accent)" }}>Deep Dive</p>
+              <h3 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>Two-Branch + Longformer Stage 3</h3>
+            </div>
+            <p className="text-base leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+              A 4-stage pipeline that routes text through a suicidal gate (Stage 1A), a normal/distress
+              splitter (Stage 1B), a 5-class distress classifier (Stage 2), and finally a Longformer
+              re-scorer that resolves ambiguous Depression vs. Suicidal calls using up to 1,024 tokens
+              of context. Takes longer on first load, but significantly sharper on the cases that matter most.
+            </p>
+            <div className="grid grid-cols-3 gap-4 pt-2">
+              {[
+                { label: "Accuracy", value: "86.97%" },
+                { label: "Dep→Sui errors", value: "740" },
+                { label: "Sui→Dep errors", value: "65" },
+              ].map(({ label, value }) => (
+                <div key={label} className="space-y-1">
+                  <p className="text-2xl font-black" style={{ color: "var(--text-primary)" }}>{value}</p>
+                  <p className="text-xs font-medium" style={{ color: "var(--text-secondary)" }}>{label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <p className="mt-6 text-sm" style={{ color: "var(--text-secondary)", opacity: 0.6 }}>
+          Dep→Sui: Depression samples misclassified as Suicidal. Sui→Dep: Suicidal samples misclassified as Depression — the more critical error. Deep Dive reduces this by 86%.
+        </p>
 
         <div
           className="mt-16 h-px w-full"

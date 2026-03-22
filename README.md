@@ -9,15 +9,47 @@ Mental health sentiment classifier — paste how you're feeling, get a vibe chec
 ## How It Works
 
 1. User types how they're feeling into the text box
-2. Frontend sends the text to the MentalBERT API on HuggingFace Spaces
-3. The model classifies it into one of 7 categories and returns a confidence score
-4. The UI theme transforms to match the result (colors, animations, overlays)
-5. If suicidal ideation is detected, crisis resources are shown automatically
+2. User selects a model — **Quick Vibe** (fast) or **Deep Dive** (more accurate)
+3. Frontend sends the text + model choice to the FastAPI backend on HuggingFace Spaces
+4. The model classifies it into one of 7 categories and returns a confidence score
+5. The UI theme transforms to match the result (colors, animations, overlays)
+6. If suicidal ideation or depression is detected, crisis resources are shown automatically
 
 ### Classifications
 `normal` · `anxiety` · `stress` · `depression` · `bipolar` · `personality_disorder` · `suicidal`
 
-(+ a rainbow easter egg)
+---
+
+## Models
+
+### Quick Vibe — MentalBERT Flat v3
+Fine-tuned MentalBERT (BERT-base-uncased with mental health domain pretraining) on a flat 7-class classification task. Single forward pass, near-instant results.
+
+| Metric | Value |
+|--------|-------|
+| Accuracy | 81.98% |
+| Sui→Dep misclassifications | 478 |
+| Dep→Sui misclassifications | 746 |
+
+### Deep Dive — Two-Branch + Longformer Stage 3
+A 4-stage pipeline that routes text through increasingly specialized models:
+
+| Stage | Model | Purpose |
+|-------|-------|---------|
+| 1A | BertForSequenceClassification | Suicidal gate (threshold 0.6) |
+| 1B | BertForSequenceClassification | Normal vs. Distress splitter |
+| 2 | BertForSequenceClassification | 5-class distress classifier |
+| 3 | LongformerForSequenceClassification | Depression vs. Suicidal re-scorer (1,024 token context) |
+
+| Metric | Value |
+|--------|-------|
+| Accuracy | 86.97% |
+| F1 Score | 0.8495 |
+| Sui→Dep misclassifications | 65 (↓86% vs Quick Vibe) |
+| Dep→Sui misclassifications | 740 |
+
+All 4 models load from HuggingFace Hub (`itsLu/mentalbert-longformer-stage3`) on first request (lazy-loaded and cached).
+
 
 ---
 
@@ -181,7 +213,7 @@ Then copy the new model files into the Space repo and push normally.
 | ---------- | ----------------------------------------------- |
 | Frontend   | Next.js 15, React 19, TypeScript, Tailwind CSS, Framer Motion, Zustand |
 | Backend    | FastAPI, Python 3.10, PyTorch (CPU), HuggingFace Transformers |
-| Model      | MentalBERT (bert-base-uncased fine-tuned), 7-class, ~82% accuracy |
+| Models     | Quick Vibe: MentalBERT Flat v3 (81.98% acc) · Deep Dive: Two-Branch + Longformer Stage 3 (86.97% acc, F1 0.8495) |
 | Hosting    | Vercel (frontend) + HuggingFace Spaces (backend) |
 
 ---
