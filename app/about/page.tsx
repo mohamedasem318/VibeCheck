@@ -103,21 +103,27 @@ export default function AboutPage() {
           The Models
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
           {/* Quick Vibe */}
           <div
-            className="rounded-2xl p-8 space-y-5"
-            style={{ backgroundColor: "var(--bg-secondary)", border: "1px solid var(--border-color)" }}
+            className="rounded-2xl p-8 flex flex-col justify-between gap-5 backdrop-blur-xl"
+            style={{
+              backgroundColor: "color-mix(in srgb, var(--bg-secondary) 40%, transparent)",
+              border: "1px solid color-mix(in srgb, var(--border-color) 60%, transparent)",
+              boxShadow: "0 8px 32px -8px rgba(0,0,0,0.3)",
+            }}
           >
-            <div className="space-y-1">
-              <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "var(--accent)" }}>Quick Vibe</p>
-              <h3 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>MentalBERT Flat v3</h3>
+            <div className="space-y-4">
+              <div className="space-y-1">
+                <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "var(--accent)" }}>Quick Vibe</p>
+                <h3 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>MentalBERT Flat v3</h3>
+              </div>
+              <p className="text-base leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                A fine-tuned MentalBERT model (BERT-base-uncased with mental health pretraining) trained
+                on a 7-class flat classification task. Fast inference — a single forward pass produces
+                the result. Best for quick reads when you want a near-instant vibe.
+              </p>
             </div>
-            <p className="text-base leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-              A fine-tuned MentalBERT model (BERT-base-uncased with mental health pretraining) trained
-              on a 7-class flat classification task. Fast inference — a single forward pass produces
-              the result. Best for quick reads when you want a near-instant vibe.
-            </p>
             <div className="grid grid-cols-3 gap-4 pt-2">
               {[
                 { label: "Accuracy", value: "81.98%" },
@@ -134,19 +140,25 @@ export default function AboutPage() {
 
           {/* Deep Dive */}
           <div
-            className="rounded-2xl p-8 space-y-5"
-            style={{ backgroundColor: "var(--bg-secondary)", border: "1px solid var(--border-color)" }}
+            className="rounded-2xl p-8 flex flex-col justify-between gap-5 backdrop-blur-xl"
+            style={{
+              backgroundColor: "color-mix(in srgb, var(--bg-secondary) 40%, transparent)",
+              border: "1px solid color-mix(in srgb, var(--border-color) 60%, transparent)",
+              boxShadow: "0 8px 32px -8px rgba(0,0,0,0.3)",
+            }}
           >
-            <div className="space-y-1">
-              <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "var(--accent)" }}>Deep Dive</p>
-              <h3 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>Two-Branch + Longformer Stage 3</h3>
+            <div className="space-y-4">
+              <div className="space-y-1">
+                <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "var(--accent)" }}>Deep Dive</p>
+                <h3 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>Two-Branch + Longformer Stage 3</h3>
+              </div>
+              <p className="text-base leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                A 4-stage pipeline that routes text through a suicidal gate (Stage 1A), a normal/distress
+                splitter (Stage 1B), a 5-class distress classifier (Stage 2), and finally a Longformer
+                re-scorer that resolves ambiguous Depression vs. Suicidal calls using up to 1,024 tokens
+                of context. Takes longer on first load, but significantly sharper on the cases that matter most.
+              </p>
             </div>
-            <p className="text-base leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-              A 4-stage pipeline that routes text through a suicidal gate (Stage 1A), a normal/distress
-              splitter (Stage 1B), a 5-class distress classifier (Stage 2), and finally a Longformer
-              re-scorer that resolves ambiguous Depression vs. Suicidal calls using up to 1,024 tokens
-              of context. Takes longer on first load, but significantly sharper on the cases that matter most.
-            </p>
             <div className="grid grid-cols-3 gap-4 pt-2">
               {[
                 { label: "Accuracy", value: "86.97%" },

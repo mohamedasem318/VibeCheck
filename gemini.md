@@ -100,7 +100,6 @@ VibeCheck/
 | **Bipolar**          | Split-screen purple/orange background, alternating opacity panels      |
 | **Personality Disorder** | Shifting color palettes, shattered glass SVG overlay, misaligned panels |
 | **Suicidal**         | Muted rose tones, crisis card with helpline resources appears          |
-| **Rainbow** (easter egg) | Rainbow text/background, triggered by typing "I'm gay" etc.       |
 
 ---
 
@@ -111,7 +110,7 @@ User types text
       ↓
 ClassifyForm.tsx
       ↓
-  Easter egg check (regex) → if match → set "rainbow" classification directly
+   classification directly
       ↓ (no match)
 lib/mockApi.ts → POST /classify to HF Spaces FastAPI
       ↓
@@ -175,9 +174,9 @@ app/page.tsx → renders result, confidence bar, crisis card
 
 - **CSS Variables** on `:root` as bridge between Tailwind and dynamic JS themes
 - **Tailwind** for layout utilities; CSS variables for colors
-- **Keyframes** in `globals.css`: `jitter`, `slow-sink`, `rainbow-bg`, `strobe`, `pd-color-shift` (all GPU optimized with `translate3d`)
+- **Keyframes** in `globals.css`: `jitter`, `slow-sink`, `strobe`, `pd-color-shift` (all GPU optimized with `translate3d`)
 - **Framer Motion** for component-level animations with `will-change: transform` hints on high-impact layers.
-- **Transition speed** varies by theme (`0.1s` for rainbow → `1.2s` for depression)
+- **Transition speed** varies by theme (`1.2s` for depression)
 
 ---
 

@@ -15,7 +15,8 @@ export async function classifyText(text: string, model: string = "mentalbert"): 
   }
 
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 10000);
+  const timeoutMs = model === "longformer" ? 120000 : 30000;
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
   let response: Response;
   try {

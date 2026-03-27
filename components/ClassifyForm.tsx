@@ -36,7 +36,7 @@ const PLACEHOLDERS = [
 ];
 
 export function ClassifyForm() {
-  const [text, setText] = useState("");
+  const { inputText: text, setInputText: setText } = useThemeStore();
   const [apiError, setApiError] = useState<string | null>(null);
   const {
     isLoading,
