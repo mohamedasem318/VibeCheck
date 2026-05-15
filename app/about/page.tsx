@@ -76,8 +76,8 @@ export default function AboutPage() {
             style={{ color: "var(--text-secondary)" }}
           >
             VibeCheck is a mental health text classifier built for students. Paste how you&apos;re
-            feeling and the model identifies your emotional state across 7 categories — from everyday
-            stress to clinical signals like suicidal ideation. The UI transforms its entire visual
+            feeling and the model identifies your emotional state across 8 categories — from everyday
+            stress to clinical signals like suicidal ideation and directed aggression. The UI transforms its entire visual
             identity to match the result, making the experience feel as human as the problem it addresses.
           </p>
         </div>

@@ -7,6 +7,7 @@ import { getThemeVars } from "@/lib/themes";
 import { BipolarBackground } from "./BipolarBackground";
 import { ShatteredGlassOverlay } from "./ShatteredGlassOverlay";
 import { AnimatedBackground } from "./AnimatedBackground";
+import { HazardOverlay } from "./HazardOverlay";
 export function ThemeWrapper({ children }: { children: React.ReactNode }) {
   const { classification, isDarkMode } = useThemeStore();
   const vars = getThemeVars(classification, isDarkMode);
@@ -26,6 +27,7 @@ export function ThemeWrapper({ children }: { children: React.ReactNode }) {
   const isPD = classification === "personality_disorder";
   const isRainbow = classification === "rainbow";
   const isStress = classification === "stress";
+  const isUnhinged = classification === "unhinged";
 
   const wrapperStyle: React.CSSProperties = {
     ...(vars as React.CSSProperties),
@@ -45,6 +47,7 @@ export function ThemeWrapper({ children }: { children: React.ReactNode }) {
       <AnimatedBackground />
       {isBipolar && <BipolarBackground />}
       {isPD && <ShatteredGlassOverlay />}
+      {isUnhinged && <HazardOverlay />}
 
       <div className="relative z-20">
         {children}

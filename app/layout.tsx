@@ -3,6 +3,7 @@ import { Nunito } from "next/font/google";
 import "./globals.css";
 import { ThemeWrapper } from "@/components/ThemeWrapper";
 import { Navbar } from "@/components/Navbar";
+import { DebugControls } from "@/components/DebugControls";
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -29,6 +30,7 @@ export default function RootLayout({
         <ThemeWrapper>
           <Navbar />
           <main className="pt-16">{children}</main>
+          {process.env.NODE_ENV === "development" && <DebugControls />}
         </ThemeWrapper>
       </body>
     </html>

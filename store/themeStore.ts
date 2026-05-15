@@ -11,6 +11,7 @@ export type Classification =
   | "personality_disorder"
   | "depression"
   | "suicidal"
+  | "unhinged"
   | "rainbow";
 
 export type ModelOption = "mentalbert" | "longformer";
@@ -21,12 +22,14 @@ interface ThemeState {
   isDarkMode: boolean;
   isLoading: boolean;
   selectedModel: ModelOption;
+  sensitiveMode: boolean;
   inputText: string;
   setClassification: (c: Classification | null) => void;
   setConfidence: (v: number | null) => void;
   setLoading: (loading: boolean) => void;
   toggleDarkMode: () => void;
   setSelectedModel: (m: ModelOption) => void;
+  setSensitiveMode: (v: boolean) => void;
   setInputText: (t: string) => void;
 }
 
@@ -38,6 +41,7 @@ export const useThemeStore = create<ThemeState>()(
       isDarkMode: true,
       isLoading: false,
       selectedModel: "mentalbert",
+      sensitiveMode: false,
       inputText: "",
       setClassification: (c) => set({ classification: c }),
       setConfidence: (v) => set({ confidence: v }),
@@ -45,6 +49,7 @@ export const useThemeStore = create<ThemeState>()(
       toggleDarkMode: () =>
         set((state) => ({ isDarkMode: !state.isDarkMode })),
       setSelectedModel: (m) => set({ selectedModel: m }),
+      setSensitiveMode: (v) => set({ sensitiveMode: v }),
       setInputText: (t) => set({ inputText: t }),
     }),
     {
@@ -55,6 +60,7 @@ export const useThemeStore = create<ThemeState>()(
         classification: state.classification,
         confidence: state.confidence,
         selectedModel: state.selectedModel,
+        sensitiveMode: state.sensitiveMode,
       }),
     }
   )

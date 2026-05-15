@@ -12,6 +12,7 @@ const PALETTES: Record<string, string[]> = {
   bipolar: ["#7e22ce", "#c2410c", "#6b21a8"],
   personality_disorder: ["#be185d", "#4338ca", "#047857"],
   suicidal: ["#831843", "#9d174d", "#be185d"],
+  unhinged: ["#FACC15", "#000000", "#EAB308"],
   // Smooth full-spectrum loop for rainbow state
   rainbow: [
     "#ef4444", // red

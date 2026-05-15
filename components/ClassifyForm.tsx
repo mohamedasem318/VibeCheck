@@ -47,6 +47,8 @@ export function ClassifyForm() {
     isDarkMode,
     selectedModel,
     setSelectedModel,
+    sensitiveMode,
+    setSensitiveMode,
   } = useThemeStore();
 
   const [currentPlaceholder, setCurrentPlaceholder] = useState(PLACEHOLDERS[0]);
@@ -82,7 +84,7 @@ export function ClassifyForm() {
     setConfidence(null);
     setLoading(true);
     try {
-      const result = await classifyText(text, selectedModel);
+      const result = await classifyText(text, selectedModel, sensitiveMode);
       setClassification(result.classification);
       setConfidence(result.confidence);
     } catch (err) {
@@ -141,7 +143,10 @@ export function ClassifyForm() {
             <button
               key={key}
               type="button"
-              onClick={() => setSelectedModel(key)}
+              onClick={() => {
+                setSelectedModel(key);
+                if (key === "mentalbert") setSensitiveMode(false);
+              }}
               style={
                 isActive
                   ? {
@@ -162,6 +167,59 @@ export function ClassifyForm() {
           );
         })}
       </div>
+
+      {/* Sensitivity selector — only relevant for Deep Dive */}
+      <AnimatePresence initial={false}>
+        {selectedModel === "longformer" && (
+          <motion.div
+            key="sensitivity"
+            initial={{ opacity: 0, y: -6, height: 0 }}
+            animate={{ opacity: 1, y: 0, height: "auto" }}
+            exit={{ opacity: 0, y: -6, height: 0 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            className="flex items-center gap-2 overflow-hidden -mt-2"
+          >
+            {([
+              { key: false, label: "Balanced" },
+              { key: true, label: "Sensitive" },
+            ] as const).map(({ key, label }) => {
+              const isActive = sensitiveMode === key;
+              return (
+                <button
+                  key={String(key)}
+                  type="button"
+                  onClick={() => setSensitiveMode(key)}
+                  aria-pressed={isActive}
+                  style={
+                    isActive
+                      ? {
+                          backgroundColor: "var(--accent)",
+                          color: "var(--bg-primary)",
+                          borderColor: "var(--accent)",
+                        }
+                      : {
+                          backgroundColor: "transparent",
+                          color: "var(--text-secondary)",
+                          borderColor:
+                            "color-mix(in srgb, var(--border-color) 60%, transparent)",
+                        }
+                  }
+                  className="px-3.5 py-1.5 rounded-xl text-xs font-semibold border transition-all"
+                >
+                  {label}
+                </button>
+              );
+            })}
+            <span
+              className="text-xs opacity-60 ml-1 cursor-help"
+              style={{ color: "var(--text-secondary)" }}
+              title="Sensitive: the model is calibrated to flag potential suicidality earlier, even at the cost of more false alarms on depression-related text. Enable this when missing a crisis indicator would be more costly than over-flagging."
+            >
+              calibration &#9432;
+            </span>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <motion.div
         animate={

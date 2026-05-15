@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useThemeStore } from "@/store/themeStore";
 import { ClassifyForm } from "@/components/ClassifyForm";
 import { CrisisCard } from "@/components/CrisisCard";
+import { BreatheCard } from "@/components/BreatheCard";
 import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 
 const vibeSubtexts: Record<string, string[]> = {
@@ -57,6 +58,15 @@ const vibeSubtexts: Record<string, string[]> = {
     "The frequency is low, but you are still worth the fight.",
     "Every life has a frequency. Yours is too valuable to lose.",
   ],
+  unhinged: [
+    "Villain arc unlocked. Take five before you do anything weird.",
+    "Detected: 'and I took that personally' energy. Step away from the group chat.",
+    "Side-eye levels: lethal. Go drink some water, bestie.",
+    "The opps are not safe rn. Let's breathe before deciding their fate.",
+    "Caution: hot anger. Please cool to room temperature.",
+    "This is a 'gonna catch a case' kinda day. Log off first.",
+    "Big 'and that's on whoever pissed me off' vibes. Pause.",
+  ],
   rainbow: [
     "Damn, that's straight up gay, not that you're straight.",
     "The AI just asked for its 15-minute break early because of how fruity this is.",
@@ -85,7 +95,7 @@ const SUBTITLES = [
 ];
 
 export default function HomePage() {
-  const { classification, isLoading, confidence } = useThemeStore();
+  const { classification, isLoading, confidence, sensitiveMode, selectedModel } = useThemeStore();
   const [subtitle, setSubtitle] = useState(SUBTITLES[0]);
   const [currentResultSubtext, setCurrentResultSubtext] = useState("");
 
@@ -106,6 +116,7 @@ export default function HomePage() {
   const isAnxiety = classification === "anxiety";
   const isBipolar = classification === "bipolar";
   const isRainbow = classification === "rainbow";
+  const isUnhinged = classification === "unhinged";
 
   // When a result is present, the layout shifts up slightly to make room
   const hasResult = classification && !isLoading;
@@ -114,6 +125,11 @@ export default function HomePage() {
     ? {
         animate: { y: [0, 6, 0] },
         transition: { duration: 5, repeat: Infinity, ease: "easeInOut" as const },
+      }
+    : isUnhinged
+    ? {
+        animate: { x: [-2.2, 2.2, -1.4, 1.4, -0.6, 0] },
+        transition: { duration: 0.75, repeat: Infinity, ease: "easeInOut" as const },
       }
     : isAnxiety || isRainbow
     ? {
@@ -134,8 +150,18 @@ export default function HomePage() {
 
   const depressionVibe = isDepression ? { y: [0, 5, 0] } : {};
 
+  const unhingedVibe = isUnhinged
+    ? {
+        x: [0, -1.8, 1.8, -1, 1, -0.4, 0],
+        y: [0, 0.6, -0.6, 0.3, -0.3, 0],
+        scale: [1, 1.013, 1],
+      }
+    : {};
+
   const vibeTransition = isDepression
     ? { duration: 4, repeat: Infinity, ease: "easeInOut" as const }
+    : isUnhinged
+    ? { duration: 1.0, repeat: Infinity, ease: "easeInOut" as const }
     : anxietyLike
     ? { duration: 0.8, repeat: Infinity, ease: "linear" as const }
     : { duration: 0 };
@@ -144,7 +170,7 @@ export default function HomePage() {
 
   return (
     <div
-      className="min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center px-6 py-16 transition-colors duration-300"
+      className="min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center px-6 pt-16 pb-24 transition-colors duration-300"
       style={{ position: "relative", zIndex: 30 }}
     >
       {/* Bipolar backdrop tint so text stays readable */}
@@ -157,10 +183,11 @@ export default function HomePage() {
 
       <motion.div
         className={`relative z-10 w-full max-w-xl flex flex-col items-center gap-8 ${isPD ? "pd-panel" : ""}`}
-        animate={{ 
+        animate={{
           y: hasResult ? -40 : 0,
           ...anxietyVibe,
-          ...depressionVibe
+          ...depressionVibe,
+          ...unhingedVibe
         }}
         transition={{ 
           y: { duration: 0.8, type: "spring", bounce: 0.3 },
@@ -258,6 +285,17 @@ export default function HomePage() {
                       transition={{ delay: 0.6, duration: 1.2, type: "spring", bounce: 0.2 }}
                     />
                   </div>
+                  {sensitiveMode && selectedModel === "longformer" && (
+                    <motion.p
+                      initial={{ opacity: 0, y: 4 }}
+                      animate={{ opacity: 0.7, y: 0 }}
+                      transition={{ delay: 1.0, duration: 0.6 }}
+                      className="mt-3 text-[10px] uppercase tracking-[0.18em] font-bold"
+                      style={{ color: "var(--accent)" }}
+                    >
+                      sensitive mode &middot; crisis recall prioritized
+                    </motion.p>
+                  )}
                 </motion.div>
               )}
             </motion.div>
@@ -327,6 +365,19 @@ export default function HomePage() {
               transition={{ duration: 0.8, type: "spring" }}
             >
               <CrisisCard />
+            </motion.div>
+          )}
+          {isUnhinged && (
+            <motion.div
+              layout
+              key="breathe"
+              className="w-full"
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ duration: 0.8, type: "spring" }}
+            >
+              <BreatheCard />
             </motion.div>
           )}
         </AnimatePresence>

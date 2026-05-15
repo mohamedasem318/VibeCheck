@@ -227,6 +227,32 @@ const themes: ThemeMap = {
       "--letter-spacing": "0.01em",
     },
   },
+  unhinged: {
+    dark: {
+      "--bg-primary": "#0C0A00",
+      "--bg-secondary": "#1A1500",
+      "--text-primary": "#FFE600",
+      "--text-secondary": "#FACC15",
+      "--accent": "#FACC15",
+      "--accent-2": "#000000",
+      "--border-color": "#423500",
+      "--transition-speed": "0.15s",
+      "--font-weight": "900",
+      "--letter-spacing": "-0.03em",
+    },
+    light: {
+      "--bg-primary": "#1A1500",
+      "--bg-secondary": "#2A2200",
+      "--text-primary": "#FFEC42",
+      "--text-secondary": "#FBBF24",
+      "--accent": "#FDE047",
+      "--accent-2": "#000000",
+      "--border-color": "#5C4A00",
+      "--transition-speed": "0.15s",
+      "--font-weight": "900",
+      "--letter-spacing": "-0.03em",
+    },
+  },
   rainbow: {
     dark: {
       "--bg-primary": "#111827",

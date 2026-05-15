@@ -11,6 +11,7 @@ const classifications: Classification[] = [
   "bipolar",
   "personality_disorder",
   "suicidal",
+  "unhinged",
   "rainbow",
 ];
 
