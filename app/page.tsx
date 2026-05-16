@@ -121,6 +121,9 @@ export default function HomePage() {
   // When a result is present, the layout shifts up slightly to make room
   const hasResult = classification && !isLoading;
 
+  // All infinite arrays start AND end at the rest position (0) so the
+  // cycle loops seamlessly. Easing is easeInOut on shakes so each cycle
+  // breathes instead of reading as a hard restart.
   const headingAnim = isDepression
     ? {
         animate: { y: [0, 6, 0] },
@@ -128,13 +131,13 @@ export default function HomePage() {
       }
     : isUnhinged
     ? {
-        animate: { x: [-2.2, 2.2, -1.4, 1.4, -0.6, 0] },
-        transition: { duration: 0.75, repeat: Infinity, ease: "easeInOut" as const },
+        animate: { x: [0, -2.2, 2.2, -1.4, 1.4, -0.6, 0] },
+        transition: { duration: 0.95, repeat: Infinity, ease: "easeInOut" as const },
       }
     : isAnxiety || isRainbow
     ? {
-        animate: { x: [-1, 1, -1, 0.5, -0.5, 0] },
-        transition: { duration: 0.9, repeat: Infinity, ease: "linear" as const },
+        animate: { x: [0, -1, 1, -1, 0.5, -0.5, 0] },
+        transition: { duration: 1.1, repeat: Infinity, ease: "easeInOut" as const },
       }
     : { animate: {}, transition: {} };
 
@@ -316,10 +319,10 @@ export default function HomePage() {
                   fontWeight: "var(--font-weight)" as string,
                   letterSpacing: "var(--letter-spacing)" as string,
                 }}
-                animate={isAnxiety ? { x: [-1, 1.5, -1, 0.5, 0] } : {}}
+                animate={isAnxiety ? { x: [0, -1, 1.5, -1, 0.5, 0] } : {}}
                 transition={
                   isAnxiety
-                    ? { duration: 1.1, repeat: Infinity, ease: "linear" }
+                    ? { duration: 1.4, repeat: Infinity, ease: "easeInOut" }
                     : {}
                 }
               >

@@ -2,54 +2,64 @@
 
 Mental health sentiment classifier — paste how you're feeling, get a vibe check. The entire UI transforms to match the detected emotional state.
 
-**Live:** https://vibecheck-eosin.vercel.app/
+**Live:** https://checkmyvibe.me
 
 ---
 
 ## How It Works
 
-1. User types how they're feeling into the text box
-2. User selects a model — **Quick Vibe** (fast) or **Deep Dive** (more accurate)
-3. Frontend sends the text + model choice to the FastAPI backend on HuggingFace Spaces
-4. The model classifies it into one of 7 categories and returns a confidence score
-5. The UI theme transforms to match the result (colors, animations, overlays)
-6. If suicidal ideation or depression is detected, crisis resources are shown automatically
+1. User types into the text box on the home page.
+2. User picks a model — **Quick Vibe** (fast, single forward pass) or **Deep Dive** (5-stage cascade).
+3. For Deep Dive, an optional **Sensitive mode** toggle lowers the cascade's crisis-detection thresholds.
+4. Frontend POSTs to the FastAPI proxy on HuggingFace Spaces, which runs the model on the Space's CPU.
+5. The model returns one of 8 classifications + a confidence score.
+6. The UI theme transforms to match (colors, animations, overlays).
+7. When suicidal ideation or depression is detected, crisis resources are shown automatically.
 
 ### Classifications
-`normal` · `anxiety` · `stress` · `depression` · `bipolar` · `personality_disorder` · `suicidal`
+`normal` · `anxiety` · `stress` · `depression` · `bipolar` · `personality_disorder` · `suicidal` · `unhinged`
+
+(`unhinged` is the display key for the model label "Directed Aggression" — threats toward others.)
+
+---
+
+## Architecture
+
+```
+Browser
+   │  fetch(POST /classify, { text, model, sensitive_mode })
+   ▼
+HuggingFace Space (itsLu/vibecheck-api)
+  FastAPI proxy
+   │  AutoModel.from_pretrained(...)   <-- Quick Vibe
+   │  EndpointHandler(snapshot_dir)    <-- Deep Dive
+   ▼
+HuggingFace Hub
+  itsLu/mentalbert-v6-flat            (8-class flat head)
+  itsLu/mentalbert-v6-hierarchical    (5-stage cascade)
+```
+
+The backend lives in a separate git repository — the HF Space repo at `huggingface.co/spaces/itsLu/vibecheck-api`. This Next.js frontend ships no Python code and no model weights; it's a thin client over the proxy.
 
 ---
 
 ## Models
 
-### Quick Vibe — MentalBERT Flat v3
-Fine-tuned MentalBERT (BERT-base-uncased with mental health domain pretraining) on a flat 7-class classification task. Single forward pass, near-instant results.
+### Quick Vibe — `itsLu/mentalbert-v6-flat`
+Fine-tuned MentalBERT (BERT-base with mental health pretraining) on a flat 8-class head — now including Directed Aggression for outward-facing threats. Single forward pass.
 
-| Metric | Value |
-|--------|-------|
-| Accuracy | 81.98% |
-| Sui→Dep misclassifications | 478 |
-| Dep→Sui misclassifications | 746 |
+### Deep Dive — `itsLu/mentalbert-v6-hierarchical`
+A 5-stage cascade with explicit safety prioritization:
 
-### Deep Dive — Two-Branch + Longformer Stage 3
-A 4-stage pipeline that routes text through increasingly specialized models:
+| Stage | Purpose |
+|---|---|
+| 0 | Directed Aggression gate |
+| 1A | Suicidal gate (Platt-calibrated) |
+| 1B | Normal vs. Distress splitter |
+| 2 | 5-class distress classifier (3-seed ensemble) |
+| 3 | Longformer Depression vs. Suicidal re-scorer (1,024 token context) |
 
-| Stage | Model | Purpose |
-|-------|-------|---------|
-| 1A | BertForSequenceClassification | Suicidal gate (threshold 0.6) |
-| 1B | BertForSequenceClassification | Normal vs. Distress splitter |
-| 2 | BertForSequenceClassification | 5-class distress classifier |
-| 3 | LongformerForSequenceClassification | Depression vs. Suicidal re-scorer (1,024 token context) |
-
-| Metric | Value |
-|--------|-------|
-| Accuracy | 86.97% |
-| F1 Score | 0.8495 |
-| Sui→Dep misclassifications | 65 (↓86% vs Quick Vibe) |
-| Dep→Sui misclassifications | 740 |
-
-All 4 models load from HuggingFace Hub (`itsLu/mentalbert-longformer-stage3`) on first request (lazy-loaded and cached).
-
+Two pre-calibrated operating points — **Balanced** (default) and **Sensitive** (lower thresholds for higher crisis recall).
 
 ---
 
@@ -57,17 +67,24 @@ All 4 models load from HuggingFace Hub (`itsLu/mentalbert-longformer-stage3`) on
 
 ```
 VibeCheck/
-├── app/                    # Next.js pages
-├── components/             # React components
+├── app/
+│   ├── page.tsx              # Home — text input, result display, theme transforms
+│   ├── about/page.tsx        # About — project overview, models, team
+│   └── layout.tsx            # Root layout, navbar, theme wrapper
+├── components/
+│   ├── ClassifyForm.tsx      # Text input + model selector + sensitivity switch
+│   ├── ThemeWrapper.tsx      # Applies CSS variables per active classification
+│   ├── AnimatedBackground.tsx
+│   ├── CrisisCard.tsx        # Shown for depression/suicidal results
+│   ├── BreatheCard.tsx       # Shown for unhinged results
+│   ├── HazardOverlay.tsx     # Yellow/black stripes for unhinged
+│   └── DebugControls.tsx     # Dev-only state-switcher (NODE_ENV gated)
 ├── lib/
-│   ├── mockApi.ts          # API client (calls HF Spaces backend)
-│   └── themes.ts           # CSS variable definitions per classification
+│   ├── mockApi.ts            # Thin fetch wrapper around the HF Space /classify
+│   └── themes.ts             # CSS variable definitions per classification
 ├── store/
-│   └── themeStore.ts       # Zustand global state
-└── backend/                # Python FastAPI inference server
-    ├── app.py
-    ├── requirements.txt
-    └── Dockerfile
+│   └── themeStore.ts         # Zustand global state
+└── public/team/              # Team member photos
 ```
 
 ---
@@ -75,154 +92,77 @@ VibeCheck/
 ## Local Development
 
 ### Prerequisites
-- Node.js 20+ (recommended for Next.js 15)
-- Python 3.10+
-- The model files in `saved_models/` (not in git — get from the team)
+- Node.js 20+
 
-### 1. Start the backend
+### Setup
 
 ```bash
-cd backend
-pip install -r requirements.txt
-python -m uvicorn app:app --port 7860 --reload
-```
-
-Verify it's running: http://localhost:7860 should return `{"status":"ok","model_loaded":true}`
-
-### 2. Configure the frontend
-
-Create `.env.local` in the project root:
-
-```
-NEXT_PUBLIC_API_URL=http://localhost:7860
-```
-
-### 3. Start the frontend
-
-```bash
+git clone https://github.com/mohamedasem318/VibeCheck.git
+cd VibeCheck
 npm install
+```
+
+Create `.env.local`:
+
+```
+NEXT_PUBLIC_API_URL=https://itsLu-vibecheck-api.hf.space
+```
+
+(You can also point at a local copy of the backend by setting it to `http://localhost:7860`. Backend setup lives in the `vibecheck-api` HF Space repo.)
+
+### Run
+
+```bash
 npm run dev
 ```
 
-Open http://localhost:3000
+Open http://localhost:3000.
 
 ---
 
-## Adding a New Feature
+## State Behavior
 
-### Add a new classification
+The Zustand store persists **preferences only** to `localStorage`:
 
-The classification list flows through several files — update all of them:
+- `isDarkMode` — your light/dark choice
+- `selectedModel` — Quick Vibe vs. Deep Dive
+- `sensitiveMode` — Balanced vs. Sensitive
 
-1. **`store/themeStore.ts`** — add the new string to the `Classification` union type
-2. **`lib/themes.ts`** — add dark + light theme variables (`ThemeVars`) for the new class
-3. **`app/page.tsx`** — add a subtext string in `vibeSubtexts` and any result-display logic
-4. **`components/ThemeWrapper.tsx`** — add any special overlay or animation for the new theme
-5. **`backend/app.py`** — add the new class to `LABEL_MAP` (maps model output → frontend key)
-6. **Model** — you'll need to retrain with the new class in the dataset
+In-memory only (resets on full page reload, persists across in-app navigation):
 
-### Add a new frontend page
+- `inputText` — the textarea content
+- `classification` / `confidence` — the last result
 
-Create `app/your-page/page.tsx`. Next.js App Router picks it up automatically. Add a link in `components/Navbar.tsx` if needed.
-
-### Add a new API endpoint
-
-In `backend/app.py`, add a new route:
-
-```python
-@app.post("/your-endpoint")
-def your_endpoint(req: YourRequest):
-    ...
-    return YourResponse(...)
-```
-
-Then call it from the frontend in `lib/mockApi.ts`.
-
-### Change the model
-
-1. Train a new model, save the checkpoint as a `.pt` file
-2. Replace `saved_models/mentalbert_v3flat_best.pt` and `label_encoder.joblib`
-3. If the architecture changes, update `BertConfig(...)` params in `backend/app.py`
-4. Push to the HF Space repo (see deployment section below)
-
-### Add a loading message
-
-Open `components/LoadingSkeleton.tsx` and add a string to the `MESSAGES` array.
+So navigating from `/` to `/about` and back keeps your draft + result, but reopening the site starts a fresh session.
 
 ---
 
 ## Deployment
 
 ### Frontend (Vercel)
+Auto-deploys on push to `main`. Set `NEXT_PUBLIC_API_URL` to the Space URL under Vercel project → Settings → Environment Variables.
 
-The frontend auto-deploys when you push to GitHub `main`.
-
-To manually redeploy or change env vars:
-1. Go to your Vercel project → **Settings** → **Environment Variables**
-2. `NEXT_PUBLIC_API_URL` should be set to `https://itsLu-vibecheck-api.hf.space`
-3. After changing env vars, go to **Deployments** → redeploy the latest
-
-### Backend (HuggingFace Spaces)
-
-The backend lives in a **separate git repo** — the HF Space repo. It is not the same as the GitHub repo.
-
-**To push backend changes:**
-
-```bash
-# One-time setup (already done, but for reference):
-git clone https://huggingface.co/spaces/itsLu/vibecheck-api vibecheck-api
-cd vibecheck-api
-
-# Copy updated files from the backend/ folder:
-cp ../VibeCheck/backend/app.py .
-cp ../VibeCheck/backend/requirements.txt .
-
-# Commit and push:
-git add app.py requirements.txt
-git commit -m "describe your change"
-git push
-```
-
-After pushing, watch the build logs at https://huggingface.co/spaces/itsLu/vibecheck-api (click **Logs**). The Space restarts automatically.
-
-**To push new model weights:**
-
-Model files are tracked with git-lfs. Make sure lfs is set up:
-
-```bash
-git lfs install
-git lfs track "*.pt" "*.joblib" "*.safetensors"
-git add .gitattributes
-```
-
-Then copy the new model files into the Space repo and push normally.
+### Backend (HuggingFace Space)
+Push to the separate `vibecheck-api` git remote. See that repo's README for env vars (`HF_TOKEN`, `ALLOWED_ORIGINS`, `MAX_INPUT_CHARS`, etc.) and operational details.
 
 ---
 
 ## Environment Variables
 
-| Variable               | Where            | Value                                        |
-| ---------------------- | ---------------- | -------------------------------------------- |
-| `NEXT_PUBLIC_API_URL`  | Vercel + `.env.local` | `https://itsLu-vibecheck-api.hf.space` (prod) or `http://localhost:7860` (dev) |
+| Variable | Where | Value |
+|---|---|---|
+| `NEXT_PUBLIC_API_URL` | Vercel + `.env.local` | `https://itsLu-vibecheck-api.hf.space` (prod) or `http://localhost:7860` (local backend) |
 
 ---
 
 ## Tech Stack
 
-| Layer      | Technology                                      |
-| ---------- | ----------------------------------------------- |
-| Frontend   | Next.js 15, React 19, TypeScript, Tailwind CSS, Framer Motion, Zustand |
-| Backend    | FastAPI, Python 3.10, PyTorch (CPU), HuggingFace Transformers |
-| Models     | Quick Vibe: MentalBERT Flat v3 (81.98% acc) · Deep Dive: Two-Branch + Longformer Stage 3 (86.97% acc, F1 0.8495) |
-| Hosting    | Vercel (frontend) + HuggingFace Spaces (backend) |
-
----
-
-## Performance & Optimization
-
-The 2026 audit introduced several key performance improvements:
-- **GPU Acceleration**: Keyframe animations (`jitter`, `slow-sink`) and heavy background elements now use `translate3d` and `will-change: transform` to offload work from the CPU to the GPU.
-- **Robust Detection**: Enhanced easter egg detection with word boundaries to prevent accidental triggers.
+| Layer | Technology |
+|---|---|
+| Frontend | Next.js 15, React 19, TypeScript, Tailwind CSS, Framer Motion, Zustand |
+| Backend | FastAPI, PyTorch CPU, HuggingFace Transformers (in the separate `vibecheck-api` repo) |
+| Models | Quick Vibe: `itsLu/mentalbert-v6-flat` · Deep Dive: `itsLu/mentalbert-v6-hierarchical` |
+| Hosting | Vercel (frontend) + HuggingFace Spaces (backend) |
 
 ---
 

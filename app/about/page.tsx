@@ -4,11 +4,36 @@ import { motion } from "framer-motion";
 import { useThemeStore } from "@/store/themeStore";
 
 const TEAM = [
-  { initials: "FE", name: "Fatma Al-Zahraa Emad", linkedin: "#" },
-  { initials: "GM", name: "Gehad Mohamed", linkedin: "#" },
-  { initials: "HG", name: "Hebatullah El Gazoly", linkedin: "#" },
-  { initials: "HI", name: "Hussein Ibrahim", linkedin: "#" },
-  { initials: "MA", name: "Mohamed Assem", linkedin: "#" },
+  {
+    initials: "FE",
+    name: "Fatma Al-Zahraa Emad",
+    image: "/team/fatma.jpg",
+    linkedin: "https://www.linkedin.com/in/fatma-al-zahraa-emad-326b64234",
+  },
+  {
+    initials: "GM",
+    name: "Gehad Mohamed",
+    image: "/team/gehad.jpg",
+    linkedin: "https://www.linkedin.com/in/gehad-mohamed-2a4946252/",
+  },
+  {
+    initials: "HG",
+    name: "Hebatullah El Gazoly",
+    image: "/team/hebatullah.jpg",
+    linkedin: "https://www.linkedin.com/in/hebatullah-elgazoly-308ab2243/",
+  },
+  {
+    initials: "HI",
+    name: "Hussein Ibrahim",
+    image: "/team/hussein.jpg",
+    linkedin: "https://www.linkedin.com/in/hussien-ebrahim-5752ab274",
+  },
+  {
+    initials: "MA",
+    name: "Mohamed Assem",
+    image: "/team/mohamed.jpg",
+    linkedin: "https://www.linkedin.com/in/mohamedasem318/",
+  },
 ];
 
 const SUPERVISORS = [
@@ -64,26 +89,46 @@ export default function AboutPage() {
           About The Project
         </h2>
 
-        <div className="max-w-4xl">
+        <div className="max-w-4xl space-y-6">
           <h1
-            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 leading-[1.1]"
+            className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1]"
             style={{ color: "var(--text-primary)" }}
           >
-            Empowering Mental Health with NLP.
+            Feelings, but make them legible.
           </h1>
           <p
             className="text-lg md:text-xl leading-relaxed"
             style={{ color: "var(--text-secondary)" }}
           >
             VibeCheck is a mental health text classifier built for students. Paste how you&apos;re
-            feeling and the model identifies your emotional state across 8 categories — from everyday
-            stress to clinical signals like suicidal ideation and directed aggression. The UI transforms its entire visual
-            identity to match the result, making the experience feel as human as the problem it addresses.
+            feeling and the model identifies your emotional state across 8 categories — from
+            everyday stress to clinical signals like suicidal ideation and directed aggression.
+            The interface transforms its entire visual identity to match the result, so the
+            experience feels as human as the problem it addresses.
+          </p>
+          <p
+            className="text-base md:text-lg leading-relaxed"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            Most sentiment classifiers reduce text to positive, negative, or neutral. That&apos;s
+            not how feelings work. VibeCheck identifies the specific shape of distress — anxiety,
+            depression, stress, bipolar mood cycling, personality-related volatility, suicidal
+            ideation, or outward aggression — and lets the UI mirror it. Color, motion, typography,
+            and the resources we surface all change with the result.
+          </p>
+          <p
+            className="text-base md:text-lg leading-relaxed"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            Under the hood there are two models. <span style={{ color: "var(--text-primary)" }}>Quick Vibe</span> is
+            a single forward pass for an instant read. <span style={{ color: "var(--text-primary)" }}>Deep Dive</span> is
+            a five-stage cascade that&apos;s deliberately tuned to favor catching suicidal cases
+            over precision — the asymmetric cost of a missed crisis indicator demands that trade.
           </p>
         </div>
 
         <div
-          className="mt-16 h-px w-full"
+          className="mt-20 h-px w-full"
           style={{ backgroundColor: "var(--border-color)" }}
         />
       </motion.section>
@@ -116,25 +161,63 @@ export default function AboutPage() {
             <div className="space-y-4">
               <div className="space-y-1">
                 <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "var(--accent)" }}>Quick Vibe</p>
-                <h3 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>MentalBERT Flat v3</h3>
+                <h3 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>MentalBERT Flat v6</h3>
               </div>
-              <p className="text-base leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-                A fine-tuned MentalBERT model (BERT-base-uncased with mental health pretraining) trained
-                on a 7-class flat classification task. Fast inference — a single forward pass produces
-                the result. Best for quick reads when you want a near-instant vibe.
+              <p
+                className="text-base leading-relaxed text-justify"
+                style={{ color: "var(--text-secondary)", hyphens: "auto" }}
+              >
+                MentalBERT &mdash; BERT-base with mental-health pretraining &mdash; fine-tuned on
+                an 8-class head. v6 retired the OLID-era Directed Aggression data and pulled in
+                explicit threat-labelled examples from Jigsaw 2017 and Civil Comments. Same class,
+                training data that actually reflects how aggression shows up in the wild. One
+                forward pass, near-instant. For when you just want the vibe.
               </p>
+              <div className="space-y-2 pt-1">
+                <p
+                  className="text-[10px] font-bold uppercase tracking-[0.2em]"
+                  style={{ color: "var(--text-secondary)", opacity: 0.7 }}
+                >
+                  v6 update
+                </p>
+                <p
+                  className="text-sm leading-relaxed"
+                  style={{ color: "var(--text-secondary)" }}
+                >
+                  Retired the OLID-sourced Directed Aggression data. Re-trained on
+                  threat-labelled examples from <span style={{ color: "var(--text-primary)" }}>Jigsaw 2017</span> +
+                  <span style={{ color: "var(--text-primary)" }}> Civil Comments</span> &mdash;
+                  same class, training data that generalizes.
+                </p>
+              </div>
             </div>
-            <div className="grid grid-cols-3 gap-4 pt-2">
-              {[
-                { label: "Accuracy", value: "81.98%" },
-                { label: "Dep→Sui errors", value: "746" },
-                { label: "Sui→Dep errors", value: "478" },
-              ].map(({ label, value }) => (
-                <div key={label} className="space-y-1">
-                  <p className="text-2xl font-black" style={{ color: "var(--text-primary)" }}>{value}</p>
-                  <p className="text-xs font-medium" style={{ color: "var(--text-secondary)" }}>{label}</p>
-                </div>
-              ))}
+            <div className="space-y-2 pt-2">
+              <p
+                className="text-[10px] font-bold uppercase tracking-[0.2em]"
+                style={{ color: "var(--text-secondary)", opacity: 0.7 }}
+              >
+                Test set
+              </p>
+              <div className="grid grid-cols-3 gap-4">
+                {[
+                  { label: "Accuracy", value: "82.12%" },
+                  { label: "Dep→Sui", value: "774" },
+                  { label: "Sui→Dep", value: "533" },
+                ].map(({ label, value }) => (
+                  <div key={label} className="space-y-1">
+                    <p
+                      className="text-2xl font-black"
+                      style={{
+                        color: "var(--accent)",
+                        textShadow: "0 0 36px color-mix(in srgb, var(--accent) 70%, transparent)",
+                      }}
+                    >
+                      {value}
+                    </p>
+                    <p className="text-xs font-medium" style={{ color: "var(--text-secondary)" }}>{label}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -150,32 +233,74 @@ export default function AboutPage() {
             <div className="space-y-4">
               <div className="space-y-1">
                 <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "var(--accent)" }}>Deep Dive</p>
-                <h3 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>Two-Branch + Longformer Stage 3</h3>
+                <h3 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>Hierarchical Cascade v6 <span className="font-medium opacity-70">(5 stages)</span></h3>
               </div>
-              <p className="text-base leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-                A 4-stage pipeline that routes text through a suicidal gate (Stage 1A), a normal/distress
-                splitter (Stage 1B), a 5-class distress classifier (Stage 2), and finally a Longformer
-                re-scorer that resolves ambiguous Depression vs. Suicidal calls using up to 1,024 tokens
-                of context. Takes longer on first load, but significantly sharper on the cases that matter most.
+              <p
+                className="text-base leading-relaxed text-justify"
+                style={{ color: "var(--text-secondary)", hyphens: "auto" }}
+              >
+                Five stages, each more careful than the last. A Directed Aggression gate up top
+                (Cardiff RoBERTa). A suicidal early-exit. A normal-vs-distress splitter. A 5-class
+                distress sorter, averaged across 3 seeds for stability. And a Longformer that
+                re-reads up to 1,024 tokens of context when depression and suicidal start blurring
+                together. Pick <span style={{ color: "var(--text-primary)" }}>Balanced</span> for
+                everyday, <span style={{ color: "var(--text-primary)" }}>Sensitive</span> when
+                missing a crisis would cost more than over-flagging. Slower than Quick Vibe,
+                significantly sharper on the cases that matter.
               </p>
             </div>
-            <div className="grid grid-cols-3 gap-4 pt-2">
-              {[
-                { label: "Accuracy", value: "86.97%" },
-                { label: "Dep→Sui errors", value: "740" },
-                { label: "Sui→Dep errors", value: "65" },
-              ].map(({ label, value }) => (
-                <div key={label} className="space-y-1">
-                  <p className="text-2xl font-black" style={{ color: "var(--text-primary)" }}>{value}</p>
-                  <p className="text-xs font-medium" style={{ color: "var(--text-secondary)" }}>{label}</p>
+            <div className="space-y-5 pt-2">
+              {([
+                {
+                  mode: "Balanced",
+                  stats: [
+                    { label: "Accuracy", value: "82.82%" },
+                    { label: "Dep→Sui", value: "941"    },
+                    { label: "Sui→Dep", value: "266"    },
+                  ],
+                },
+                {
+                  mode: "Sensitive",
+                  stats: [
+                    { label: "Accuracy", value: "82.45%" },
+                    { label: "Dep→Sui", value: "1113"   },
+                    { label: "Sui→Dep", value: "161"    },
+                  ],
+                },
+              ] as const).map(({ mode, stats }) => (
+                <div key={mode} className="space-y-2">
+                  <p
+                    className="text-[10px] font-bold uppercase tracking-[0.2em]"
+                    style={{ color: "var(--text-secondary)", opacity: 0.7 }}
+                  >
+                    {mode}
+                  </p>
+                  <div className="grid grid-cols-3 gap-4">
+                    {stats.map(({ label, value }) => (
+                      <div key={label} className="space-y-1">
+                        <p
+                          className="text-2xl font-black"
+                          style={{
+                            color: "var(--accent)",
+                            textShadow: "0 0 36px color-mix(in srgb, var(--accent) 70%, transparent)",
+                          }}
+                        >
+                          {value}
+                        </p>
+                        <p className="text-xs font-medium" style={{ color: "var(--text-secondary)" }}>{label}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>
           </div>
         </div>
 
-        <p className="mt-6 text-sm" style={{ color: "var(--text-secondary)", opacity: 0.6 }}>
-          Dep→Sui: Depression samples misclassified as Suicidal. Sui→Dep: Suicidal samples misclassified as Depression — the more critical error. Deep Dive reduces this by 86%.
+        <p className="mt-6 text-sm leading-relaxed" style={{ color: "var(--text-secondary)", opacity: 0.6 }}>
+          Dep&rarr;Sui: Depression samples misclassified as Suicidal. Sui&rarr;Dep: Suicidal
+          samples misclassified as Depression &mdash; the more critical error. Sensitive mode
+          trades a small amount of macro F1 for catching ~40% more of these (266 &rarr; 161).
         </p>
 
         <div
@@ -205,18 +330,32 @@ export default function AboutPage() {
               variants={itemVariants}
               className="flex flex-col items-center gap-6 group"
             >
-              {/* Avatar Container */}
+              {/* Avatar Container — photo with initials fallback */}
               <div className="relative">
                 <div
-                  className="w-24 h-24 md:w-32 md:h-32 rounded-3xl flex items-center justify-center text-2xl md:text-3xl font-bold select-none transition-transform duration-300 group-hover:scale-105 group-hover:-rotate-3"
+                  className="relative w-24 h-24 md:w-32 md:h-32 rounded-3xl overflow-hidden flex items-center justify-center text-2xl md:text-3xl font-bold select-none transition-transform duration-300 group-hover:scale-105 group-hover:-rotate-3"
                   style={{
                     backgroundColor: "var(--bg-secondary)",
                     color: "var(--text-primary)",
                     border: "2px solid var(--border-color)",
-                    boxShadow: "0 10px 30px -10px rgba(0,0,0,0.1)"
+                    boxShadow: "0 10px 30px -10px rgba(0,0,0,0.1)",
                   }}
                 >
-                  {member.initials}
+                  {/* Initials sit underneath; image covers them when it loads */}
+                  <span aria-hidden>{member.initials}</span>
+                  {member.image && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={member.image}
+                      alt={member.name}
+                      loading="lazy"
+                      onError={(e) => {
+                        // Hide the <img> if the file isn't there yet — initials show through
+                        (e.currentTarget as HTMLImageElement).style.display = "none";
+                      }}
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  )}
                 </div>
                 {/* Decorative background element */}
                 <div
@@ -237,6 +376,8 @@ export default function AboutPage() {
                 {/* LinkedIn Icon */}
                 <a
                   href={member.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center justify-center p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
                   style={{ color: "var(--text-secondary)" }}
                   aria-label={`${member.name} on LinkedIn`}
@@ -303,24 +444,105 @@ export default function AboutPage() {
         transition={{ duration: 0.4 }}
       >
         <h2
-          className="text-sm font-bold uppercase tracking-[0.25em] mb-6"
+          className="text-sm font-bold uppercase tracking-[0.25em] mb-8"
           style={{ color: "var(--text-secondary)" }}
         >
           Disclaimer
         </h2>
 
-        <p
-          className="text-base md:text-lg leading-relaxed max-w-3xl"
-          style={{ color: "var(--text-secondary)" }}
-        >
-          VibeCheck is an academic NLP project developed as part of a university
-          course. It isn&apos;t a substitute for professional mental health support,
-          clinical assessment, or any form of medical advice. All classifications
-          produced by this system are model predictions based on input text and
-          should not be interpreted as diagnoses of any mental health condition.
-          If you or someone you know is struggling, please consult a qualified
-          mental health professional.
-        </p>
+        <div className="max-w-4xl space-y-5">
+          <p
+            className="text-lg md:text-xl leading-relaxed"
+            style={{ color: "var(--text-primary)" }}
+          >
+            VibeCheck is an academic NLP project. It can spot patterns in text, but
+            it can&apos;t read you. Whatever it produces is a guess based on training
+            data &mdash; sometimes useful, sometimes off, and never the whole story
+            of what you&apos;re carrying.
+          </p>
+          <p
+            className="text-base md:text-lg leading-relaxed"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            If it lands on a heavy label and that doesn&apos;t feel right to you,
+            trust yourself first. The model isn&apos;t diagnosing you. It&apos;s
+            reflecting a pattern back &mdash; that&apos;s exactly why the UI is built
+            to feel like a mirror, not a verdict.
+          </p>
+          <p
+            className="text-base md:text-lg leading-relaxed"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            And if you are going through something heavy: you don&apos;t have to carry
+            it alone. Reaching out &mdash; to a friend who&apos;ll just listen, a
+            counselor, a crisis line &mdash; is one of the bravest things you can do,
+            not a sign that things have to be at their worst. The numbers below are
+            free and they&apos;re there for you whenever you&apos;re ready.
+          </p>
+        </div>
+
+        {/* Crisis resources — full-width strip below the prose */}
+        <div className="mt-10">
+          <p
+            className="text-xs font-bold uppercase tracking-[0.25em] mb-5"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            When you&apos;re ready to talk
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {[
+              {
+                title: "Egypt — Suicide Prevention",
+                line: "16328 · 24/7",
+                href: null,
+              },
+              {
+                title: "Shezlong — Online Therapy",
+                line: "shezlong.com",
+                href: "https://shezlong.com",
+              },
+              {
+                title: "Worldwide — IASP",
+                line: "findahelpline.com",
+                href: "https://findahelpline.com",
+              },
+            ].map(({ title, line, href }) => (
+              <div
+                key={title}
+                className="rounded-2xl p-5 space-y-1 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-0.5"
+                style={{
+                  backgroundColor: "color-mix(in srgb, var(--bg-secondary) 40%, transparent)",
+                  border: "1px solid color-mix(in srgb, var(--border-color) 50%, transparent)",
+                }}
+              >
+                <p
+                  className="text-sm font-bold"
+                  style={{ color: "var(--text-primary)" }}
+                >
+                  {title}
+                </p>
+                {href ? (
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-base font-medium underline underline-offset-4 hover:opacity-80 transition-opacity"
+                    style={{ color: "var(--accent)" }}
+                  >
+                    {line}
+                  </a>
+                ) : (
+                  <p
+                    className="text-base font-medium"
+                    style={{ color: "var(--accent)" }}
+                  >
+                    {line}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
       </motion.section>
     </div>
   );

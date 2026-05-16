@@ -32,3 +32,6 @@ next-env.d.ts
 
 # model weights — too large for GitHub, deploy separately to HF Spaces
 /saved_models
+
+# local Claude Code state
+.claude/

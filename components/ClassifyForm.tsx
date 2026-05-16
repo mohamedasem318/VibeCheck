@@ -114,11 +114,11 @@ export function ClassifyForm() {
       }
     : isBaseState
     ? {
-        backgroundColor: isDarkMode ? "#f9fafb" : "#111827",
+        backgroundColor: isDarkMode ? "#f9fafb" : "#000000",
         color: isDarkMode ? "#020617" : "#f9fafb",
         transition: `all var(--transition-speed) ease`,
         transform: isPD ? "rotate(0.3deg) translateX(-2px)" : "none",
-        boxShadow: "0 0 40px -12px rgba(15, 23, 42, 0.6)",
+        boxShadow: "0 0 40px -12px rgba(0, 0, 0, 0.6)",
       }
     : {
         backgroundColor: "var(--accent)",
@@ -168,7 +168,7 @@ export function ClassifyForm() {
         })}
       </div>
 
-      {/* Sensitivity selector — only relevant for Deep Dive */}
+      {/* Sensitivity switch — only relevant for Deep Dive */}
       <AnimatePresence initial={false}>
         {selectedModel === "longformer" && (
           <motion.div
@@ -177,46 +177,56 @@ export function ClassifyForm() {
             animate={{ opacity: 1, y: 0, height: "auto" }}
             exit={{ opacity: 0, y: -6, height: 0 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="flex items-center gap-2 overflow-hidden -mt-2"
+            className="overflow-hidden -mt-2"
           >
-            {([
-              { key: false, label: "Balanced" },
-              { key: true, label: "Sensitive" },
-            ] as const).map(({ key, label }) => {
-              const isActive = sensitiveMode === key;
-              return (
-                <button
-                  key={String(key)}
-                  type="button"
-                  onClick={() => setSensitiveMode(key)}
-                  aria-pressed={isActive}
-                  style={
-                    isActive
-                      ? {
-                          backgroundColor: "var(--accent)",
-                          color: "var(--bg-primary)",
-                          borderColor: "var(--accent)",
-                        }
-                      : {
-                          backgroundColor: "transparent",
-                          color: "var(--text-secondary)",
-                          borderColor:
-                            "color-mix(in srgb, var(--border-color) 60%, transparent)",
-                        }
-                  }
-                  className="px-3.5 py-1.5 rounded-xl text-xs font-semibold border transition-all"
-                >
-                  {label}
-                </button>
-              );
-            })}
-            <span
-              className="text-xs opacity-60 ml-1 cursor-help"
-              style={{ color: "var(--text-secondary)" }}
-              title="Sensitive: the model is calibrated to flag potential suicidality earlier, even at the cost of more false alarms on depression-related text. Enable this when missing a crisis indicator would be more costly than over-flagging."
+            <button
+              type="button"
+              role="switch"
+              aria-checked={sensitiveMode}
+              aria-label="Sensitive mode"
+              onClick={() => setSensitiveMode(!sensitiveMode)}
+              className="group flex items-center gap-3 select-none cursor-pointer"
             >
-              calibration &#9432;
-            </span>
+              <span
+                className="text-sm font-medium transition-opacity"
+                style={{
+                  color: "var(--text-secondary)",
+                  opacity: sensitiveMode ? 1 : 0.7,
+                }}
+              >
+                Sensitive mode
+              </span>
+              <span
+                className="relative inline-block rounded-full transition-colors"
+                style={{
+                  width: 40,
+                  height: 22,
+                  backgroundColor: sensitiveMode
+                    ? "var(--accent)"
+                    : "color-mix(in srgb, var(--text-secondary) 22%, transparent)",
+                  border: `1px solid ${
+                    sensitiveMode
+                      ? "var(--accent)"
+                      : "color-mix(in srgb, var(--border-color) 70%, transparent)"
+                  }`,
+                  transitionDuration: "var(--transition-speed)",
+                }}
+              >
+                <motion.span
+                  className="absolute top-1/2 rounded-full shadow-md"
+                  style={{
+                    width: 16,
+                    height: 16,
+                    y: "-50%",
+                    backgroundColor: sensitiveMode
+                      ? "var(--bg-primary)"
+                      : "var(--text-primary)",
+                  }}
+                  animate={{ left: sensitiveMode ? 21 : 3 }}
+                  transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                />
+              </span>
+            </button>
           </motion.div>
         )}
       </AnimatePresence>
@@ -224,12 +234,12 @@ export function ClassifyForm() {
       <motion.div
         animate={
           isAnxiety
-            ? { rotate: [-0.15, 0.15, -0.1, 0.1, 0] }
+            ? { rotate: [0, -0.15, 0.15, -0.1, 0.1, 0] }
             : { rotate: 0 }
         }
         transition={
           isAnxiety
-            ? { duration: 1.8, repeat: Infinity, ease: "linear" }
+            ? { duration: 2.2, repeat: Infinity, ease: "easeInOut" }
             : { duration: 0 }
         }
         className="relative group"

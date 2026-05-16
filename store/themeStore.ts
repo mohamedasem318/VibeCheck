@@ -54,11 +54,11 @@ export const useThemeStore = create<ThemeState>()(
     }),
     {
       name: "vibecheck-theme",
+      // Persist user PREFERENCES only. inputText/classification/confidence
+      // stay in-memory so SPA navigation (check ↔ about) preserves them
+      // but a full reload starts the session fresh.
       partialize: (state) => ({
         isDarkMode: state.isDarkMode,
-        inputText: state.inputText,
-        classification: state.classification,
-        confidence: state.confidence,
         selectedModel: state.selectedModel,
         sensitiveMode: state.sensitiveMode,
       }),

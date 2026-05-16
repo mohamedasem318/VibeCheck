@@ -75,7 +75,7 @@ export function AnimatedBackground() {
         transition={{
           duration: isRainbow ? 26 : 15,
           repeat: Infinity,
-          ease: "linear",
+          ease: "easeInOut",
         }}
       />
 
@@ -93,7 +93,7 @@ export function AnimatedBackground() {
         transition={{
           duration: isRainbow ? 32 : 18,
           repeat: Infinity,
-          ease: "linear",
+          ease: "easeInOut",
           delay: isRainbow ? 4 : 2,
         }}
       />
@@ -112,7 +112,7 @@ export function AnimatedBackground() {
         transition={{
           duration: isRainbow ? 38 : 25,
           repeat: Infinity,
-          ease: "linear",
+          ease: "easeInOut",
           delay: isRainbow ? 8 : 5,
         }}
       />
