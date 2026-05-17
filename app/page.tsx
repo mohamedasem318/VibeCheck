@@ -100,12 +100,15 @@ export default function HomePage() {
   const [currentResultSubtext, setCurrentResultSubtext] = useState("");
 
   useEffect(() => {
+    // Randomize post-mount to keep SSR and client markup identical (avoid hydration mismatch).
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSubtitle(SUBTITLES[Math.floor(Math.random() * SUBTITLES.length)]);
   }, []);
 
   useEffect(() => {
     if (classification && vibeSubtexts[classification]) {
       const options = vibeSubtexts[classification];
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCurrentResultSubtext(options[Math.floor(Math.random() * options.length)]);
     }
   }, [classification]);

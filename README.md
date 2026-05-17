@@ -92,7 +92,7 @@ VibeCheck/
 ## Local Development
 
 ### Prerequisites
-- Node.js 20+
+- Node.js 22+ (see `.nvmrc`)
 
 ### Setup
 
@@ -159,7 +159,7 @@ Push to the separate `vibecheck-api` git remote. See that repo's README for env 
 
 | Layer | Technology |
 |---|---|
-| Frontend | Next.js 15, React 19, TypeScript, Tailwind CSS, Framer Motion, Zustand |
+| Frontend | Next.js 16, React 19, TypeScript, Tailwind CSS, Framer Motion, Zustand |
 | Backend | FastAPI, PyTorch CPU, HuggingFace Transformers (in the separate `vibecheck-api` repo) |
 | Models | Quick Vibe: `itsLu/mentalbert-v6-flat` · Deep Dive: `itsLu/mentalbert-v6-hierarchical` |
 | Hosting | Vercel (frontend) + HuggingFace Spaces (backend) |

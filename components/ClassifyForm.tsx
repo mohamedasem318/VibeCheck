@@ -54,6 +54,8 @@ export function ClassifyForm() {
   const [currentPlaceholder, setCurrentPlaceholder] = useState(PLACEHOLDERS[0]);
 
   useEffect(() => {
+    // Randomize post-mount to keep SSR and client markup identical (avoid hydration mismatch).
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCurrentPlaceholder(PLACEHOLDERS[Math.floor(Math.random() * PLACEHOLDERS.length)]);
   }, []);
 

@@ -59,7 +59,7 @@ Backend lives in a **separate repo** (`huggingface.co/spaces/itsLu/vibecheck-api
 ### Frontend
 | Category    | Technology                          |
 | ----------- | ----------------------------------- |
-| Framework   | Next.js 15 (App Router)             |
+| Framework   | Next.js 16 (App Router)             |
 | Language    | TypeScript (strict)                 |
 | Styling     | Tailwind CSS 3 + CSS Variables      |
 | Animations  | Framer Motion 11                    |
